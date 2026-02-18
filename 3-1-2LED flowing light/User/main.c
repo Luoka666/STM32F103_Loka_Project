@@ -1,0 +1,52 @@
+#include "stm32f10x.h"// Device header
+#include "delay.h"
+int main(void){
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+	GPIO_InitTypeDef P;
+	P.GPIO_Mode = GPIO_Mode_Out_PP;
+	//GPIO_Pin_0 | GPIO_Pin_1
+	P.GPIO_Pin = 0x00FF;// 0000 0000 0000 0001 | 0000 0000 0000 0010 == 0000 0000 0000 0011
+	P.GPIO_Speed =  GPIO_Speed_50MHz;
+	GPIO_Init(GPIOA,&P);
+	uint16_t pins[] = {GPIO_Pin_0,GPIO_Pin_1,GPIO_Pin_2,GPIO_Pin_3,GPIO_Pin_4,GPIO_Pin_5,GPIO_Pin_6,GPIO_Pin_7};
+	while(1){
+		for(int i  = 0; i < 8; i++){
+			
+			//关闭前一个灯
+			GPIO_ResetBits(GPIOA,pins[i - 1]);
+			//打开LED
+			GPIO_SetBits(GPIOA,pins[i]);
+			Delay_ms(200);
+			if( i == 7)
+				GPIO_ResetBits(GPIOA,pins[i]);
+			
+		}
+		
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_7);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_0);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_1);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_1);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_2);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_2);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_3);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_3);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_4);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_4);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_5);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_5);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_6);
+//		Delay_ms(200);
+//		GPIO_ResetBits(GPIOA,GPIO_Pin_6);
+//		GPIO_SetBits(GPIOA,GPIO_Pin_7);
+//		Delay_ms(200);
+//	
+	}
+	
+}
