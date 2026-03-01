@@ -3,7 +3,7 @@
 int main(void){
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
 	GPIO_InitTypeDef P;
-	P.GPIO_Mode = GPIO_Mode_Out_PP;
+	P.GPIO_Mode = GPIO_Mode_Out_PP;//推挽输出
 	//GPIO_Pin_0 | GPIO_Pin_1
 	P.GPIO_Pin = 0x00FF;// 0000 0000 0000 0001 | 0000 0000 0000 0010 == 0000 0000 0000 0011
 	P.GPIO_Speed =  GPIO_Speed_50MHz;
