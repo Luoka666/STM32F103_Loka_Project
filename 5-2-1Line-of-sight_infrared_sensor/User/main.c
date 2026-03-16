@@ -2,7 +2,6 @@
 #include "OLED.h"
 #include "Counter_sensor.h"
 #include <stdint.h>
-
 int main(void) {
 
     OLED_Init();
