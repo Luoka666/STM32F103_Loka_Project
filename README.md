@@ -1,1 +1,5 @@
+<<<<<<< Updated upstream
 
+=======
+这是我的第一个 STM32 工程，实现了 PC13 蓝灯闪烁。白天的兼职虽然累，但晚上的代码很亮。
+>>>>>>> Stashed changes
