@@ -16,7 +16,7 @@ int main(void) {
             TIM_SetCompare1(TIM2,i);
              s = (i * 100) / 999;
             OLED_ShowNum(1,1,s,3);
-            Delay_ms(2);    // 0 -- 999,共1000级，1000 * 1ms，共1S，时间合适，一秒慢亮，一秒慢灭。
+            Delay_ms(1);    // 0 -- 999,共1000级，1000 * 1ms，共1S，时间合适，一秒慢亮，一秒慢灭。
 
 
         }
@@ -25,7 +25,7 @@ int main(void) {
             TIM_SetCompare1(TIM2,999 - i);
             s = ((999 - i) * 100) / 999;
             OLED_ShowNum(1,1,s,3);
-            Delay_ms(2);
+            Delay_ms(1);
 
         }
 
