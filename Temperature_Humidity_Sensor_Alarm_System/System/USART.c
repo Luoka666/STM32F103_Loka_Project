@@ -11,6 +11,13 @@
      RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
      RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
 
+     GPIO_InitTypeDef s;
+     s.GPIO_Mode = GPIO_Mode_AF_PP;
+     s.GPIO_Speed = GPIO_Speed_50MHz;
+     s.GPIO_Pin = GPIO_Pin_9;
+     GPIO_Init(GPIOA, &s);
+
+
      //初始化
      USART_InitTypeDef p;
      p.USART_BaudRate = 9600;
@@ -29,17 +36,14 @@
   * 返 回 值：无
   */
 void usart_send(uint8_t temp, uint8_t humi) {
+    // 发送温度
+    USART_SendData(USART1, temp);
+    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 
-     USART_SendData(USART1, temp);
-     USART_SendData(USART1, ' ');
-     USART_SendData(USART1, humi);
-
- }
-/**
-  * 函    数：串口发送字符串
-  * 参    数：uint8_t temp，uint8_t humi
-  * 返 回 值：无
-  */
+    // 发送湿度
+    USART_SendData(USART1, humi);
+    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+}
 void usart_send_str(uint8_t *str) {
 
      while(*str) {

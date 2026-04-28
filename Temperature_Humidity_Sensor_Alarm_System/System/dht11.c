@@ -41,7 +41,7 @@ void DHT11_Accept() {
     GPIO_ResetBits(GPIOA,GPIO_Pin_0);
     Delay_ms(18);
     // 拉高30us
-    GPIO_ResetBits(GPIOA,GPIO_Pin_0);
+    GPIO_SetBits(GPIOA,GPIO_Pin_0);
     Delay_us(30);
 
 }
