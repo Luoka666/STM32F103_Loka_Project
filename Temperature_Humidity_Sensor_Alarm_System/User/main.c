@@ -30,7 +30,7 @@ int main(void) {
 
         keyNum = Key_GetNum();
         //系统状态取反
-        if (keyNum == 1) {
+        if (keyNum) {
 
             State = !State;
 
@@ -46,7 +46,7 @@ int main(void) {
 
 
         if (State) {
-            
+
             if (data_Check(&temp, &humi) == 1) {
 
                 OLED_ShowString(2, 1, "Temp: ");
@@ -62,16 +62,29 @@ int main(void) {
                 usart_send(temp, humi);
 
             } else {
-                
-                OLED_Clear();//两种界面对应一种状态，需要加清屏，再绘画界面
-				OLED_ShowString(1, 1, "DHT11 Monitor");
+
+                OLED_ShowString(1, 1, "DHT11 Monitor");
                 OLED_ShowString(2, 1, "Read Failed!");
                 OLED_ShowString(3, 1, "Check Wiring!");
                 OLED_ShowString(4, 1, "Status: ERR ");
 
             }
+            //按键失灵问题，不能从RUN状态成功转到STOP状态,在按键按下后，RUN状态下，系统可能正处于延时阶段，从而不能成功检测到按键。
+            //将2000ms分成20次100ms，在延时中也检测按键是否按下
+            // Delay_ms(2000);
+            for (int i = 0; i < 20;i++) {
 
-            Delay_ms(2000);
+                Delay_ms(100);
+				//处理完事件后，如果不重新通过函数查询硬件，程序就会一直认为“事件仍在发生”。
+                keyNum = Key_GetNum(); // 必须重新获取按键状态！（防止旧的keyNum数据影响判断）,如果不按按键，则返回0
+                if (keyNum) {
+
+                    State = !State; 
+                    break;
+
+                }
+
+            }
 
         }else {
 

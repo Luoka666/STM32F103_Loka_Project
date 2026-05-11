@@ -1,5 +1,5 @@
 #include "stm32f10x.h"
-
+#include <stdio.h>
 /**
   * 函    数：USART串口初始化
   * 参    数：无
@@ -35,14 +35,29 @@
   * 参    数：uint8_t temp，uint8_t humi
   * 返 回 值：无
   */
-void usart_send(uint8_t temp, uint8_t humi) {
-    // 发送温度
-    USART_SendData(USART1, temp);
-    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+//void usart_send(uint8_t temp, uint8_t humi) {
+//    // 发送温度
+//    USART_SendData(USART1, temp);
+//    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
 
-    // 发送湿度
-    USART_SendData(USART1, humi);
-    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+//    // 发送湿度
+//    USART_SendData(USART1, humi);
+//    while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+//}
+void usart_send(uint8_t temp, uint8_t humi) {
+	
+    char str[20];
+    // 将温湿度格式化为字符串 "T:26 H:23\r\n"
+    // \r\n 是换行符，让数据在串口助手里一行行显示
+    int len = sprintf(str, "Temp:%d Humi:%d\r\n", temp, humi);
+    
+    for (int i = 0; i < len; i++) {
+		
+        USART_SendData(USART1, str[i]);
+        while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+		
+    }
+	
 }
 void usart_send_str(uint8_t *str) {
 
