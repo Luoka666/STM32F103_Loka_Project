@@ -680,6 +680,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\USART.h</FilePath>
             </File>
+            <File>
+              <FileName>warning_system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\warning_system.c</FilePath>
+            </File>
+            <File>
+              <FileName>warning_system.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\warning_system.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

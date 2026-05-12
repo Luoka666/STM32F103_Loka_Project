@@ -8,14 +8,25 @@ uint8_t temp = 0;
 uint8_t humi = 0;
 uint8_t keyNum = 0;
 
-//记录系统状态
+// 系统状态
 typedef enum {
-    STOP = 0,
-    RUN
+    STOP = 0,// 停滞状态
+    RUN,// 运行状态
+    SETTING_MENU,// 设置状态
+    SETTING_HISTORY,// 显示历史记录状态
+    SETTING_CHANGE,// 显示温湿度可更改项状态
+    SETTING_CHANGE_TEMP,// 更改温度状态
+    SETTING_CHANGE_HUMI,// 更改湿度状态
 } SystemState;
+// 定义按键
+#define KEY_RUN_STOP  1
+#define KEY_SETTING   2
+#define KEY_UP        3
+#define KEY_DOWN      4
+#define KEY_CONFIRM   5
 
-SystemState State = STOP; //系统默认停止
-SystemState last_State = STOP;//记录状态变化前的系统状态
+// 定义默认状态
+SystemState CurrentState = STOP; // 系统默认停止
 
 int main(void) {
     DHT11_Init();
@@ -24,76 +35,62 @@ int main(void) {
     Key_Init();
 
     OLED_Clear(); // 清屏
-    OLED_ShowString(1, 1, "DHT11 Monitor");
+
 
     while (1) {
-
         keyNum = Key_GetNum();
-        //系统状态取反
-        if (keyNum) {
 
-            State = !State;
+        // --- 第一部分：按键控制状态跳转 ---
+        if (keyNum != 0) { // 只有按键按下才处理
+            SystemState nextState = CurrentState; // 预设下一个状态为当前状态
 
-        }
-        //检测到状态变化，执行清屏
-        if (State != last_State) {
-
-            OLED_Clear();
-            OLED_ShowString(1, 1, "DHT11 Monitor");
-            last_State = State;//更新状态
-
-        }
-
-
-        if (State) {
-
-            if (data_Check(&temp, &humi) == 1) {
-
-                OLED_ShowString(2, 1, "Temp: ");
-                OLED_ShowNum(2, 6, temp, 2);
-                OLED_ShowChar(2, 8, 'C');
-
-                OLED_ShowString(3, 1, "Humi: ");
-                OLED_ShowNum(3, 6, humi, 2);
-                OLED_ShowChar(3, 8, '%');
-
-                OLED_ShowString(4, 1, "State: RUN  ");
-                //串口发送
-                usart_send(temp, humi);
-
-            } else {
-
-                OLED_ShowString(1, 1, "DHT11 Monitor");
-                OLED_ShowString(2, 1, "Read Failed!");
-                OLED_ShowString(3, 1, "Check Wiring!");
-                OLED_ShowString(4, 1, "Status: ERR ");
-
+            // 全局逻辑：K1 永远负责启停
+            if (keyNum == KEY_RUN_STOP) {
+                nextState = (CurrentState == RUN) ? STOP : RUN;
             }
-            //按键失灵问题，不能从RUN状态成功转到STOP状态,在按键按下后，RUN状态下，系统可能正处于延时阶段，从而不能成功检测到按键。
-            //将2000ms分成20次100ms，在延时中也检测按键是否按下
-            // Delay_ms(2000);
-            for (int i = 0; i < 20;i++) {
+            else {
+                // 局部逻辑：根据当前状态决定按键功能
+                switch (CurrentState) {
+                    case STOP:
+                        if (keyNum == KEY_SETTING) nextState = SETTING_MENU;
+                        break;
 
-                Delay_ms(100);
-				//处理完事件后，如果不重新通过函数查询硬件，程序就会一直认为“事件仍在发生”。
-                keyNum = Key_GetNum(); // 必须重新获取按键状态！（防止旧的keyNum数据影响判断）,如果不按按键，则返回0
-                if (keyNum) {
+                    case SETTING_MENU:
+                        if (keyNum == KEY_CONFIRM) nextState = SETTING_CHANGE;
+                        if (keyNum == KEY_SETTING) nextState = STOP; // 返回
+                        break;
 
-                    State = !State; 
-                    break;
+                    case SETTING_CHANGE:
+                        if (keyNum == KEY_CONFIRM) nextState = SETTING_MENU; // 确认保存并返回
+                        break;
 
+                        // K3, K4 在这里不改变状态，而是在“状态控制行为”里改变具体的变量值
+                    default: break;
                 }
-
             }
 
-        }else {
-
-            OLED_ShowString(2, 1, "State: STOP");
-            OLED_ShowString(3, 1, "Waiting");
-            OLED_ShowString(4, 1, "Press Key");
-
+            // 判定状态是否真的改变了
+            if (nextState != CurrentState) {
+                CurrentState = nextState;
+                OLED_Clear(); // 只有状态切换时才清屏
+            }
         }
 
+        // --- 第二部分：状态控制行为 ---
+        switch (CurrentState) {
+            case RUN:
+                // 1. 读取DHT11
+                // 2. 检查报警阈值
+                // 3. 刷新数值显示
+                break;
+            case SETTING_MENU:
+                // 显示菜单文字，并根据 keyNum (K3/K4) 移动光标
+                break;
+            case STOP:
+                // 显示待机界面
+                break;
+            default: break;
+        }
     }
 
 }
