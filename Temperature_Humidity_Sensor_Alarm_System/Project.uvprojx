@@ -690,6 +690,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\warning_system.h</FilePath>
             </File>
+            <File>
+              <FileName>UI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\UI.c</FilePath>
+            </File>
+            <File>
+              <FileName>UI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\UI.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
