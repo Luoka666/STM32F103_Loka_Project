@@ -29,42 +29,42 @@ uint8_t Key_GetNum(void)
 {
 	uint8_t KeyNum = 0;		//定义变量，默认键码值为0
 	
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0)			//读PB1输入寄存器的状态，如果为0，则代表按键1按下
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1) == 0)			//读PB1输入寄存器的状态，如果为0，则代表按键1按下
 	{
 		Delay_ms(20);											//延时消抖
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0);	//等待按键松手
+		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_1) == 0);	//等待按键松手
 		Delay_ms(20);											//延时消抖
 		KeyNum = 1;												//置键码为1
 	}
 	
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_2) == 0)
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == 0)
 	{
 		Delay_ms(20);
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_2) == 0);
+		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_2) == 0);
 		Delay_ms(20);
 		KeyNum = 2;
 	}
 
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_3) == 0)
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) == 0)
 	{
 		Delay_ms(20);
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_3) == 0);
+		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_3) == 0);
 		Delay_ms(20);
 		KeyNum = 3;
 	}
 
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_4) == 0)
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) == 0)
 	{
 		Delay_ms(20);
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_4) == 0);
+		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4) == 0);
 		Delay_ms(20);
 		KeyNum = 4;
 	}
 
-	if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5) == 0)
+	if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == 0)
 	{
 		Delay_ms(20);
-		while (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_5) == 0);
+		while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5) == 0);
 		Delay_ms(20);
 		KeyNum = 5;
 	}

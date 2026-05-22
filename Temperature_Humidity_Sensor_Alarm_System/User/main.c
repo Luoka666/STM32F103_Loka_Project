@@ -4,93 +4,148 @@
 #include "delay.h"
 #include "USART.h"
 #include "key.h"
-uint8_t temp = 0;
-uint8_t humi = 0;
+#include "UI.h"
+#include "LED.h"
+uint8_t temperature = 0, humidity = 0;
 uint8_t keyNum = 0;
+uint8_t menu_index = 0;
+uint8_t threshold_menu_index = 0;
+//初始报警阈值
+uint8_t temp_threshold = 70, humi_threshold = 60; // 报警阈值
 
-// 系统状态
+//系统状态
 typedef enum {
-    STOP = 0,// 停滞状态
-    RUN,// 运行状态
-    SETTING_MENU,// 设置状态
-    SETTING_HISTORY,// 显示历史记录状态
-    SETTING_CHANGE,// 显示温湿度可更改项状态
-    SETTING_CHANGE_TEMP,// 更改温度状态
-    SETTING_CHANGE_HUMI,// 更改湿度状态
+    STOP = 0,//停滞状态
+    RUN,//运行状态
+    SETTING_MENU,//设置状态,只有在STOP状态，才能进入。
+    SETTING_HISTORY,//显示历史记录状态
+    SETTING_CHANGE,//显示温湿度可更改项状态
+    SETTING_CHANGE_TEMP,//更改温度状态
+    SETTING_CHANGE_HUMI,//更改湿度状态
 } SystemState;
-// 定义按键
+//定义按键
 #define KEY_RUN_STOP  1
-#define KEY_SETTING   2
+#define KEY_CONFIRM   2 //即为确认也为保存
 #define KEY_UP        3
 #define KEY_DOWN      4
-#define KEY_CONFIRM   5
+#define KEY_SETTING_back   5 //k5在stop状态下为设置，在设置状态及其子状态下，为返回。
+//定义默认状态
+SystemState currentState = STOP; //系统默认停止
 
-// 定义默认状态
-SystemState CurrentState = STOP; // 系统默认停止
+int main(void){
+	
+	
+    currentState = STOP;
 
-int main(void) {
-    DHT11_Init();
+    // 初始化外设...
     OLED_Init();
+    DHT11_Init();
     usart_Init();
-    Key_Init();
+	Key_Init();    // 按键初始化（之前修好的那个）
+	LED_Init();    // LED 初始化
 
-    OLED_Clear(); // 清屏
+    OLED_Clear();
 
+    while (1){
+		
+        keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
+		
+		static SystemState lastState = STOP; // 记录上一次的状态
 
-    while (1) {
-        keyNum = Key_GetNum();
-
-        // --- 第一部分：按键控制状态跳转 ---
-        if (keyNum != 0) { // 只有按键按下才处理
-            SystemState nextState = CurrentState; // 预设下一个状态为当前状态
-
-            // 全局逻辑：K1 永远负责启停
-            if (keyNum == KEY_RUN_STOP) {
-                nextState = (CurrentState == RUN) ? STOP : RUN;
-            }
-            else {
-                // 局部逻辑：根据当前状态决定按键功能
-                switch (CurrentState) {
-                    case STOP:
-                        if (keyNum == KEY_SETTING) nextState = SETTING_MENU;
-                        break;
-
-                    case SETTING_MENU:
-                        if (keyNum == KEY_CONFIRM) nextState = SETTING_CHANGE;
-                        if (keyNum == KEY_SETTING) nextState = STOP; // 返回
-                        break;
-
-                    case SETTING_CHANGE:
-                        if (keyNum == KEY_CONFIRM) nextState = SETTING_MENU; // 确认保存并返回
-                        break;
-
-                        // K3, K4 在这里不改变状态，而是在“状态控制行为”里改变具体的变量值
-                    default: break;
-                }
-            }
-
-            // 判定状态是否真的改变了
-            if (nextState != CurrentState) {
-                CurrentState = nextState;
-                OLED_Clear(); // 只有状态切换时才清屏
-            }
-        }
-
-        // --- 第二部分：状态控制行为 ---
-        switch (CurrentState) {
-            case RUN:
-                // 1. 读取DHT11
-                // 2. 检查报警阈值
-                // 3. 刷新数值显示
-                break;
-            case SETTING_MENU:
-                // 显示菜单文字，并根据 keyNum (K3/K4) 移动光标
-                break;
+        /* ===== 第一层：按键 → 状态跳转 ===== */
+        switch (currentState)
+        {
             case STOP:
-                // 显示待机界面
+                if (keyNum == KEY_RUN_STOP) currentState = RUN;        // K1 运行
+                if (keyNum == KEY_SETTING_back) currentState = SETTING_MENU; // K5 设置
                 break;
-            default: break;
-        }
-    }
 
+            case RUN:
+                if (keyNum == KEY_RUN_STOP) currentState = STOP;        // K1 停止
+                // K2 在 RUN 状态下故意不处理，保证运行安全
+                break;
+
+            case SETTING_MENU:
+                if (keyNum == KEY_CONFIRM) {                           // K2 确认
+                    if (menu_index == 0)      currentState = SETTING_HISTORY;
+                    else if (menu_index == 1) currentState = SETTING_CHANGE;
+                    else if (menu_index == 2) currentState = STOP;
+                }
+                // K3/K4 在 MENU 状态下只改变 menu_index，不跳转状态
+                if (keyNum == 3) menu_index = (menu_index > 0) ? menu_index - 1 : 2;
+                if (keyNum == 4) menu_index = (menu_index < 2) ? menu_index + 1 : 0;
+                break;
+
+            case SETTING_HISTORY:
+                if (keyNum == 5) currentState = SETTING_MENU; // K5 返回
+                break;
+
+            case SETTING_CHANGE:
+                if (keyNum == KEY_SETTING_back) currentState = SETTING_MENU; // K5 返回
+                if (keyNum == KEY_CONFIRM) {                            // K2 确认
+                    if (threshold_menu_index == 0)      currentState = SETTING_CHANGE_TEMP;
+                    else if (threshold_menu_index == 1) currentState = SETTING_CHANGE_HUMI;
+                }
+                if (keyNum == 3) threshold_menu_index = 0;
+                if (keyNum == 4) threshold_menu_index = 1;
+                break;
+
+            case SETTING_CHANGE_TEMP:
+                if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
+                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }// k2保存
+                // K3/K4 调整阈值数值
+                if (keyNum == 3) temp_threshold++;
+                if (keyNum == 4) temp_threshold--;
+                break;
+
+            case SETTING_CHANGE_HUMI:
+                if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
+                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }
+                if (keyNum == 3) humi_threshold++;
+                if (keyNum == 4) humi_threshold--;
+                break;
+        }
+		
+		/* 状态切换时清屏 */
+        if (currentState != lastState) {
+            OLED_Clear();
+            lastState = currentState;
+        }
+
+        /* ===== 第二层：状态 → 行为执行 ===== */
+        switch (currentState)
+        {
+            case STOP:
+                stop_ui();
+                break;
+
+            case RUN:
+                data_Check(&temperature, &humidity);          // 采集数据
+                run_ui(temperature, humidity);                // 更新显示// 报警判断
+                usart_send(temperature, humidity);             // 串口发送
+                break;
+
+            case SETTING_MENU:
+                setting_menu_ui();
+                break;
+
+            case SETTING_HISTORY:
+                setting_history_ui();
+                break;
+
+            case SETTING_CHANGE:
+                setting_change_ui();
+                break;
+
+            case SETTING_CHANGE_TEMP:
+                setting_change_temp_ui();
+                break;
+
+            case SETTING_CHANGE_HUMI:
+                setting_change_humi_ui();
+                break;
+        }
+
+        Delay_ms(100);
+    }
 }
