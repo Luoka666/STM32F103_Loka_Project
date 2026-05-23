@@ -59,10 +59,19 @@ void usart_send(uint8_t temp, uint8_t humi) {
     }
 	
 }
-void usart_send_str(uint8_t *str) {
-
-     while(*str) {
-         USART_SendData(USART1, *str++);
-     }
-
- }
+/**
+ * 函    数：USART_SendString
+ * 功    能：通过串口发送一串字符（ASCII 字符串）
+ * 参    数：str 指向要发送的字符串（必须以 '\0' 结尾）
+ * 返 回 值：无
+ */
+void USART_SendString(char *str)
+{
+    while (*str != '\0')          // 只要还没到字符串结尾
+    {
+        USART_SendData(USART1, *str);   // 发送当前字符
+        // 等待发送数据寄存器空（保证字符发完）
+        while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);
+        str++;                     // 指向下一个字符
+    }
+}

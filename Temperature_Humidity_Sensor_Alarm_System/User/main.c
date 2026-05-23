@@ -6,6 +6,7 @@
 #include "key.h"
 #include "UI.h"
 #include "LED.h"
+#include <stdio.h>
 uint8_t temperature = 0, humidity = 0;
 uint8_t keyNum = 0;
 uint8_t menu_index = 0;
@@ -46,9 +47,15 @@ int main(void){
 
     OLED_Clear();
 
-    while (1){
+	while (1){
 		
         keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
+		
+		if (keyNum != 0) {
+		char buf[40];
+		sprintf(buf, "keyNum=%d, state=%d\r\n", keyNum, currentState);
+		USART_SendString(buf); 
+		}
 		
 		static SystemState lastState = STOP; // 记录上一次的状态
 
@@ -148,4 +155,8 @@ int main(void){
 
         Delay_ms(100);
     }
+
+
+		
 }
+

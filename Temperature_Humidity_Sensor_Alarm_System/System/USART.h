@@ -8,5 +8,5 @@
 
 void usart_Init(void);
 void usart_send(uint8_t temp, uint8_t humi);
-
+void USART_SendString(char *str);
 #endif //TEMPLE_PROJECT_USART_H
