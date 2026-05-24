@@ -6,6 +6,7 @@
 #include "key.h"
 #include "UI.h"
 #include "LED.h"
+#include "alarm.h"
 #include <stdio.h>
 uint8_t temperature = 0, humidity = 0;
 uint8_t keyNum = 0;
@@ -34,8 +35,8 @@ typedef enum {
 SystemState currentState = STOP; //系统默认停止
 
 int main(void){
-	
-	
+
+
     currentState = STOP;
 
     // 初始化外设...
@@ -48,15 +49,16 @@ int main(void){
     OLED_Clear();
 
 	while (1){
-		
+
         keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
 		
-		if (keyNum != 0) {
-		char buf[40];
-		sprintf(buf, "keyNum=%d, state=%d\r\n", keyNum, currentState);
-		USART_SendString(buf); 
-		}
-		
+		//串口显示按键参数，用于调试
+//		if (keyNum != 0) {
+//		char buf[40];
+//		sprintf(buf, "keyNum=%d, state=%d\r\n", keyNum, currentState);
+//		USART_SendString(buf);
+//		}
+
 		static SystemState lastState = STOP; // 记录上一次的状态
 
         /* ===== 第一层：按键 → 状态跳转 ===== */
@@ -99,7 +101,7 @@ int main(void){
 
             case SETTING_CHANGE_TEMP:
                 if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
-                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }// k2保存
+//                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }// k2保存
                 // K3/K4 调整阈值数值
                 if (keyNum == 3) temp_threshold++;
                 if (keyNum == 4) temp_threshold--;
@@ -107,17 +109,19 @@ int main(void){
 
             case SETTING_CHANGE_HUMI:
                 if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
-                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }
+//                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }
                 if (keyNum == 3) humi_threshold++;
                 if (keyNum == 4) humi_threshold--;
                 break;
+
         }
-		
+
 		/* 状态切换时清屏 */
         if (currentState != lastState) {
             OLED_Clear();
             lastState = currentState;
         }
+
 
         /* ===== 第二层：状态 → 行为执行 ===== */
         switch (currentState)
@@ -151,12 +155,10 @@ int main(void){
             case SETTING_CHANGE_HUMI:
                 setting_change_humi_ui();
                 break;
+
         }
 
         Delay_ms(100);
     }
 
-
-		
 }
-

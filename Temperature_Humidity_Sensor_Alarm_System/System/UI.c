@@ -72,7 +72,7 @@ void setting_change_temp_ui(void) {
     OLED_ShowNum(2, 9, temp_threshold, 2);
     OLED_ShowChar(2, 11, 'C');
     OLED_ShowString(3, 1, "UP/DN to change");
-    OLED_ShowString(4, 1, "K5:Save K2:Back");
+    OLED_ShowString(4, 1, "K5:Back and Save");
 }
 /* ========== 湿度更改界面 ========== */
 void setting_change_humi_ui(void) {
@@ -81,7 +81,7 @@ void setting_change_humi_ui(void) {
     OLED_ShowNum(2, 9, humi_threshold, 2);
     OLED_ShowChar(2, 11, '%');
     OLED_ShowString(3, 1, "UP/DN to change");
-    OLED_ShowString(4, 1, "K5:Save K2:Back");
+    OLED_ShowString(4, 1, "K5:Back and Save");
 }
 /* ========== 历史记录显示界面 ========== */
 void setting_history_ui() {

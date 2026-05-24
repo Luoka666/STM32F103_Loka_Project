@@ -681,16 +681,6 @@
               <FilePath>.\System\USART.h</FilePath>
             </File>
             <File>
-              <FileName>warning_system.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\System\warning_system.c</FilePath>
-            </File>
-            <File>
-              <FileName>warning_system.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\System\warning_system.h</FilePath>
-            </File>
-            <File>
               <FileName>UI.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\System\UI.c</FilePath>
@@ -699,6 +689,16 @@
               <FileName>UI.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\System\UI.h</FilePath>
+            </File>
+            <File>
+              <FileName>alarm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\alarm.c</FilePath>
+            </File>
+            <File>
+              <FileName>alarm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\alarm.h</FilePath>
             </File>
           </Files>
         </Group>

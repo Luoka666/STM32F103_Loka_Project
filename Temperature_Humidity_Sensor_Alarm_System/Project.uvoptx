@@ -923,8 +923,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\System\warning_system.c</PathWithFileName>
-      <FilenameWithoutPath>warning_system.c</FilenameWithoutPath>
+      <PathWithFileName>.\System\UI.c</PathWithFileName>
+      <FilenameWithoutPath>UI.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -935,8 +935,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\System\warning_system.h</PathWithFileName>
-      <FilenameWithoutPath>warning_system.h</FilenameWithoutPath>
+      <PathWithFileName>.\System\UI.h</PathWithFileName>
+      <FilenameWithoutPath>UI.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -947,8 +947,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\System\UI.c</PathWithFileName>
-      <FilenameWithoutPath>UI.c</FilenameWithoutPath>
+      <PathWithFileName>.\System\alarm.c</PathWithFileName>
+      <FilenameWithoutPath>alarm.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -959,8 +959,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\System\UI.h</PathWithFileName>
-      <FilenameWithoutPath>UI.h</FilenameWithoutPath>
+      <PathWithFileName>.\System\alarm.h</PathWithFileName>
+      <FilenameWithoutPath>alarm.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
