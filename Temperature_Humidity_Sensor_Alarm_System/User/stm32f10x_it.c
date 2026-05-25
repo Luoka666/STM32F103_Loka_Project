@@ -132,8 +132,11 @@ void PendSV_Handler(void)
   * @param  None
   * @retval None
   */
+
+extern volatile uint32_t g_millis;
 void SysTick_Handler(void)
 {
+	 g_millis++;//直接在 stm32f10x_it.c 里写SysTick_Handler，避免重复定义
 }
 
 /******************************************************************************/

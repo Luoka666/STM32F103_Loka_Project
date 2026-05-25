@@ -8,12 +8,15 @@
 #include "LED.h"
 #include "alarm.h"
 #include <stdio.h>
+
+//变量定义
 uint8_t temperature = 0, humidity = 0;
 uint8_t keyNum = 0;
 uint8_t menu_index = 0;
 uint8_t threshold_menu_index = 0;
 //初始报警阈值
 uint8_t temp_threshold = 70, humi_threshold = 60; // 报警阈值
+volatile uint32_t g_millis = 0;
 
 //系统状态
 typedef enum {
@@ -39,19 +42,20 @@ int main(void){
 
     currentState = STOP;
 
-    // 初始化外设...
+    // 初始化外设
     OLED_Init();
     DHT11_Init();
     usart_Init();
 	Key_Init();    // 按键初始化（之前修好的那个）
 	LED_Init();    // LED 初始化
+    SysTick_Config(SystemCoreClock / 1000);  // 1ms 中断
 
     OLED_Clear();
 
 	while (1){
 
         keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
-		
+
 		//串口显示按键参数，用于调试
 //		if (keyNum != 0) {
 //		char buf[40];
@@ -134,6 +138,7 @@ int main(void){
                 data_Check(&temperature, &humidity);          // 采集数据
                 run_ui(temperature, humidity);                // 更新显示// 报警判断
                 usart_send(temperature, humidity);             // 串口发送
+                alarm_run(temperature, humidity);              // 报警系统
                 break;
 
             case SETTING_MENU:
