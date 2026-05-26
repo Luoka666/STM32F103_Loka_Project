@@ -15,8 +15,8 @@ uint8_t keyNum = 0;
 uint8_t menu_index = 0;
 uint8_t threshold_menu_index = 0;
 //初始报警阈值
-uint8_t temp_threshold = 70, humi_threshold = 60; // 报警阈值
-volatile uint32_t g_millis = 0;
+uint8_t temp_threshold = 70, humi_threshold = 30; // 报警阈值
+
 
 //系统状态
 typedef enum {
@@ -49,12 +49,18 @@ int main(void){
 	Key_Init();    // 按键初始化（之前修好的那个）
 	LED_Init();    // LED 初始化
     SysTick_Config(SystemCoreClock / 1000);  // 1ms 中断
+	// 强制使能 SysTick 定时器和中断（修复 CTRL=0x4 的问题）
+	SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk | SysTick_CTRL_TICKINT_Msk;
 
     OLED_Clear();
 
 	while (1){
 
-        keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
+        // 调试：直接读 SysTick 寄存器
+		char buf[60];
+		sprintf(buf, "CTRL=0x%lX, VAL=%lu\r,millis=%lu\r\n", SysTick->CTRL, SysTick->VAL,millis());
+		USART_SendString(buf);
+		Delay_ms(200);
 
 		//串口显示按键参数，用于调试
 //		if (keyNum != 0) {
@@ -62,6 +68,13 @@ int main(void){
 //		sprintf(buf, "keyNum=%d, state=%d\r\n", keyNum, currentState);
 //		USART_SendString(buf);
 //		}
+//		//串口显示g_millis参数，用于调试
+//		char buf[40];
+//		sprintf(buf,"millis=%lu\r\n", millis());
+//		USART_SendString(buf);
+//		Delay_ms(500);
+		
+		keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
 
 		static SystemState lastState = STOP; // 记录上一次的状态
 
@@ -79,6 +92,7 @@ int main(void){
                 break;
 
             case SETTING_MENU:
+				if (keyNum == 5) currentState = STOP;//k5可以返回
                 if (keyNum == KEY_CONFIRM) {                           // K2 确认
                     if (menu_index == 0)      currentState = SETTING_HISTORY;
                     else if (menu_index == 1) currentState = SETTING_CHANGE;
@@ -137,7 +151,7 @@ int main(void){
             case RUN:
                 data_Check(&temperature, &humidity);          // 采集数据
                 run_ui(temperature, humidity);                // 更新显示// 报警判断
-                usart_send(temperature, humidity);             // 串口发送
+//                usart_send(temperature, humidity);             // 串口发送
                 alarm_run(temperature, humidity);              // 报警系统
                 break;
 

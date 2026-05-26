@@ -5,4 +5,5 @@
 #ifndef TEMPLE_PROJECT_ALARM_H
 #define TEMPLE_PROJECT_ALARM_H
 void alarm_run(uint8_t temp, uint8_t humi);
+uint32_t millis(void);
 #endif //TEMPLE_PROJECT_ALARM_H

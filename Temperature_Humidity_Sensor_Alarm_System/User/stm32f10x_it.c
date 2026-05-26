@@ -133,11 +133,14 @@ void PendSV_Handler(void)
   * @retval None
   */
 
-extern volatile uint32_t g_millis;
+
+
+volatile uint32_t g_millis = 0;
 void SysTick_Handler(void)
 {
 	 g_millis++;//直接在 stm32f10x_it.c 里写SysTick_Handler，避免重复定义
 }
+
 
 /******************************************************************************/
 /*                 STM32F10x Peripherals Interrupt Handlers                   */
