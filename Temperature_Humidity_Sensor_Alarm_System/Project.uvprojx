@@ -700,6 +700,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\alarm.h</FilePath>
             </File>
+            <File>
+              <FileName>Record_storage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Record_storage.c</FilePath>
+            </File>
+            <File>
+              <FileName>Record_storage.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Record_storage.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
