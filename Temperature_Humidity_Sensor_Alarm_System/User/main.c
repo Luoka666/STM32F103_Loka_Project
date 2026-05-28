@@ -7,6 +7,7 @@
 #include "UI.h"
 #include "LED.h"
 #include "alarm.h"
+#include "Record_storage.h"
 #include <stdio.h>
 
 //变量定义
@@ -56,11 +57,11 @@ int main(void){
 
 	while (1){
 
-        // 调试：直接读 SysTick 寄存器
-		char buf[60];
-		sprintf(buf, "CTRL=0x%lX, VAL=%lu\r,millis=%lu\r\n", SysTick->CTRL, SysTick->VAL,millis());
-		USART_SendString(buf);
-		Delay_ms(200);
+//        // 调试：直接读 SysTick 寄存器
+//		char buf[60];
+//		sprintf(buf, "CTRL=0x%lX, VAL=%lu\r,millis=%lu\r\n", SysTick->CTRL, SysTick->VAL,millis());
+//		USART_SendString(buf);
+//		Delay_ms(200);
 
 		//串口显示按键参数，用于调试
 //		if (keyNum != 0) {
@@ -73,7 +74,7 @@ int main(void){
 //		sprintf(buf,"millis=%lu\r\n", millis());
 //		USART_SendString(buf);
 //		Delay_ms(500);
-		
+
 		keyNum = Key_GetNum();  // 非阻塞，无按键返回 0
 
 		static SystemState lastState = STOP; // 记录上一次的状态
@@ -151,8 +152,9 @@ int main(void){
             case RUN:
                 data_Check(&temperature, &humidity);          // 采集数据
                 run_ui(temperature, humidity);                // 更新显示// 报警判断
-//                usart_send(temperature, humidity);             // 串口发送
+                usart_send(temperature, humidity);             // 串口发送
                 alarm_run(temperature, humidity);              // 报警系统
+                history_add(temperature, humidity);            //历史数据存储
                 break;
 
             case SETTING_MENU:
@@ -171,7 +173,7 @@ int main(void){
                 setting_change_temp_ui();
                 break;
 
-            case SETTING_CHANGE_HUMI:
+            case SETTING_CHANGE_HUMI:                                                 
                 setting_change_humi_ui();
                 break;
 

@@ -30,6 +30,7 @@
 ".\objects\usart.o"
 ".\objects\ui.o"
 ".\objects\alarm.o"
+".\objects\record_storage.o"
 ".\objects\led.o"
 ".\objects\key.o"
 ".\objects\oled.o"

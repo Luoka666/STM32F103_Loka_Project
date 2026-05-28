@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "stm32f10x.h"
 #include "oled.h"
+#include "Record_storage.h"
 #include "dht11.h"
 #include "key.h"
 
@@ -9,8 +10,11 @@ extern uint8_t temp_threshold, humi_threshold;
 extern uint8_t menu_index;
 extern uint8_t threshold_menu_index;
 extern uint8_t keyNum;
-
+extern uint8_t history_temp[];
+extern uint8_t history_humi[];
+extern uint8_t history_count;
 uint8_t line_index = 1;
+
 /* ========== 停滞界面 ========== */
 void stop_ui(void) {
 
@@ -84,16 +88,37 @@ void setting_change_humi_ui(void) {
     OLED_ShowString(4, 1, "K5:Back and Save");
 }
 /* ========== 历史记录显示界面 ========== */
+//显示的是实时值，并没有成功存储为历史记录，意思是我在关闭系统后，这些记录会瞬间消失，并不会存储下来
+//使用了移位寄存器方式（history_add(temperature, humidity)），并显示出来
 void setting_history_ui() {
-    if (line_index == 5) {
-        line_index = 1;
-    }
-    OLED_ShowString(line_index, 1, "T:");
-    OLED_ShowNum(line_index, 3, temperature, 2);
-    OLED_ShowChar(line_index, 5, 'C');
-    OLED_ShowString(line_index, 7, "H:");
-    OLED_ShowNum(line_index, 9, humidity, 2);
-    OLED_ShowString(line_index, 11, "%");
-    line_index ++;
+    uint8_t i;
 
+    // 如果还没有存储任何记录，显示空白
+    if (history_count == 0)
+    {
+        for (i = 0; i < HISTORY_SIZE; i++)
+        {
+            OLED_ShowString(i + 1, 1, "                "); // 清空4行
+        }
+        return;
+    }
+
+    // 从第1行开始，逐行显示历史数据（最新数据在最下面）
+    for (i = 0; i < history_count; i++)
+    {
+        OLED_ShowString(i + 1, 1, "T:");
+        OLED_ShowNum(i + 1, 3, history_temp[i], 2);
+        OLED_ShowChar(i + 1, 5, 'C');
+        OLED_ShowString(i + 1, 7, "H:");
+        OLED_ShowNum(i + 1, 9, history_humi[i], 2);
+        OLED_ShowChar(i + 1, 11, '%');
+    }
+
+    // 如果还没有存满4条，用空行填充剩余行，避免残留旧字符
+    for (i = history_count; i < HISTORY_SIZE; i++)
+    {
+        OLED_ShowString(i + 1, 1, "                "); // 清空该行
+    }
 }
+
+
