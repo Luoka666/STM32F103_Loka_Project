@@ -5,13 +5,23 @@
   * @param  xus 延时时长，范围：0~233015
   * @retval 无
   */
+// void Delay_us(uint32_t xus)
+// {
+// 	SysTick->LOAD = 72 * xus;				//设置定时器重装值
+// 	SysTick->VAL = 0x00;					//清空当前计数值
+// 	SysTick->CTRL = 0x00000005;				//设置时钟源为HCLK，启动定时器
+// 	while(!(SysTick->CTRL & 0x00010000));	//等待计数到0
+// 	SysTick->CTRL = 0x00000004;				//关闭定时器
+// }
+//更新微妙延时函数，防止其影响SysTick，8为经验值。可更改为8-10
 void Delay_us(uint32_t xus)
 {
-	SysTick->LOAD = 72 * xus;				//设置定时器重装值
-	SysTick->VAL = 0x00;					//清空当前计数值
-	SysTick->CTRL = 0x00000005;				//设置时钟源为HCLK，启动定时器
-	while(!(SysTick->CTRL & 0x00010000));	//等待计数到0
-	SysTick->CTRL = 0x00000004;				//关闭定时器
+	uint32_t count = xus * 8;
+
+	while(count--)
+	{
+		__NOP();
+	}
 }
 
 /**
