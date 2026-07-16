@@ -16,7 +16,7 @@ uint8_t keyNum = 0;
 uint8_t menu_index = 0;
 uint8_t threshold_menu_index = 0;
 //初始报警阈值
-uint8_t temp_threshold = 20, humi_threshold = 70; // 报警阈值
+uint8_t temp_threshold = 40, humi_threshold = 80; // 报警阈值
 
 
 //系统状态
@@ -42,12 +42,12 @@ SystemState currentState = STOP; //系统默认停止
 int main(void) {
     currentState = STOP;
 
-    // 初始化外设
+    // 初始化外设（外设不工作，一定要先看有没有初始化😭😭😭😭）
     OLED_Init();
     DHT11_Init();
     usart_Init();
     Key_Init(); // 按键初始化（之前修好的那个）
-    LED_Init(); // LED 初始化
+    init_alarm(); 
     //配置SysTick。
     SysTick_Config(SystemCoreClock / 1000); // 1ms 中断
     OLED_Clear();

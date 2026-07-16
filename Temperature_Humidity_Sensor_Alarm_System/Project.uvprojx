@@ -750,6 +750,16 @@
               <FileType>5</FileType>
               <FilePath>.\Hardware\OLED_Font.h</FilePath>
             </File>
+            <File>
+              <FileName>buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>buzzer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\buzzer.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
