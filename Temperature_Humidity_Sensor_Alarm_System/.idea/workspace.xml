@@ -8,8 +8,20 @@
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
   </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="" />
+    <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,12 +30,81 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="225" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="gjQ0KMk5" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0000000000000466" />
+      <entry key="S10" value="1.0000002721224628" />
+      <entry key="S30" value="1.0158323095948112" />
+      <entry key="S60" value="1.3828199085550328" />
+      <entry key="M2" value="3.2436999557254023" />
+      <entry key="M5" value="7.9081647282771765" />
+      <entry key="M10" value="11.154276590068154" />
+      <entry key="M15" value="12.558284228428889" />
+      <entry key="M30" value="14.163608834229075" />
+      <entry key="H1" value="15.050893409662311" />
+      <entry key="H2" value="15.517449570981494" />
+      <entry key="H4" value="15.756690779824526" />
+      <entry key="D1" value="15.959162965253311" />
+      <entry key="W1" value="15.994159106677893" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="0.0" />
+      <entry key="M5" value="0.0" />
+      <entry key="M10" value="0.0" />
+      <entry key="M15" value="0.0" />
+      <entry key="M30" value="0.0" />
+      <entry key="H1" value="0.0" />
+      <entry key="H2" value="0.0" />
+      <entry key="H4" value="0.0" />
+      <entry key="D1" value="0.0" />
+      <entry key="W1" value="0.0" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="0.9201876506248751" />
+      <entry key="MS500" value="0.9835020740262483" />
+      <entry key="S2" value="0.9958497530944581" />
+      <entry key="S5" value="0.998337829704413" />
+      <entry key="S10" value="0.9991688411685324" />
+      <entry key="S30" value="1.0155504421541117" />
+      <entry key="S60" value="1.3825977489216543" />
+      <entry key="M2" value="3.2433204713659944" />
+      <entry key="M5" value="7.907698313116108" />
+      <entry key="M10" value="11.153925693922938" />
+      <entry key="M15" value="12.558015485113453" />
+      <entry key="M30" value="14.163454296889201" />
+      <entry key="H1" value="15.050810513954977" />
+      <entry key="H2" value="15.51740663654826" />
+      <entry key="H4" value="15.756668930541732" />
+      <entry key="D1" value="15.959159269735505" />
+      <entry key="W1" value="15.994158577413085" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="3AqrPUU2y51tfU2hDhX59PcDtJR" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -32,6 +113,7 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -40,9 +122,18 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "cf.first.check.clang-format": "false",
     "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "D:/GithubHouse/STM32F103_Loka_Project/4-1 OLED显示屏",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
     "org.rust.first.attach.projects": "true",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -54,6 +145,7 @@
       <option name="presentableId" value="Default" />
       <updated>1773330917311</updated>
       <workItem from="1773330918473" duration="23000" />
+      <workItem from="1784536208111" duration="610000" />
     </task>
     <servers />
   </component>
