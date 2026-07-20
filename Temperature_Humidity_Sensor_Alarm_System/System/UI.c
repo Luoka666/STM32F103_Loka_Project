@@ -88,36 +88,33 @@ void setting_change_humi_ui(void) {
     OLED_ShowString(4, 1, "K5:Back and Save");
 }
 /* ========== 历史记录显示界面 ========== */
-//显示的是实时值，并没有成功存储为历史记录，意思是我在关闭系统后，这些记录会瞬间消失，并不会存储下来
-//使用了移位寄存器方式（history_add(temperature, humidity)），并显示出来
+// 历史记录从环形缓冲区按时间顺序读取（最旧到最新），逐行显示
 void setting_history_ui() {
     uint8_t i;
 
-    // 如果还没有存储任何记录，显示空白
-    if (history_count == 0)
-    {
-        for (i = 0; i < HISTORY_SIZE; i++)
-        {
-            OLED_ShowString(i + 1, 1, "                "); // 清空4行
+    if (history_count == 0) {
+        for (i = 0; i < HISTORY_SIZE; i++) {
+            OLED_ShowString(i + 1, 1, "                ");
         }
         return;
     }
 
-    // 从第1行开始，逐行显示历史数据（最新数据在最下面）
-    for (i = 0; i < history_count; i++)
-    {
+    // 环形缓冲区读取：从 write_index（最旧）开始，顺时针绕回
+    uint8_t start = (history_count < HISTORY_SIZE) ? 0 : write_index;
+
+    for (i = 0; i < history_count; i++) {
+        uint8_t idx = (start + i) % HISTORY_SIZE;
         OLED_ShowString(i + 1, 1, "T:");
-        OLED_ShowNum(i + 1, 3, history_temp[i], 2);
+        OLED_ShowNum(i + 1, 3, history_temp[idx], 2);
         OLED_ShowChar(i + 1, 5, 'C');
         OLED_ShowString(i + 1, 7, "H:");
-        OLED_ShowNum(i + 1, 9, history_humi[i], 2);
+        OLED_ShowNum(i + 1, 9, history_humi[idx], 2);
         OLED_ShowChar(i + 1, 11, '%');
     }
 
-    // 如果还没有存满4条，用空行填充剩余行，避免残留旧字符
-    for (i = history_count; i < HISTORY_SIZE; i++)
-    {
-        OLED_ShowString(i + 1, 1, "                "); // 清空该行
+    // 空行填充
+    for (i = history_count; i < HISTORY_SIZE; i++) {
+        OLED_ShowString(i + 1, 1, "                ");
     }
 }
 

@@ -88,6 +88,7 @@ int main(void) {
 
         //高频轮询，每一轮检测按键
 //        keyNum = Key_GetNum(); // 非阻塞，无按键返回 0（防止按键事件丢失，移到if内）
+
         alarm_run(temperature, humidity); // 报警系统//已经为非阻塞设计，每轮都跑
 
         if (now - last_task_time >= 100) {
@@ -166,11 +167,11 @@ int main(void) {
                     break;
 
                 case RUN:
-                    data_Check(&temperature, &humidity); // 采集数据
-                    run_ui(temperature, humidity); // 更新显示// 报警判断
-                    usart_send(temperature, humidity); // 串口发送
-                    // alarm_run(temperature, humidity); // 报警系统
-                    history_add(temperature, humidity); //历史数据存储
+                    if (data_Check(&temperature, &humidity)) {   // 读取成功才更新，忘记加if，所以之前返回值根本没被检查
+                        run_ui(temperature, humidity);
+                        usart_send(temperature, humidity);
+                        history_add(temperature, humidity);
+                    }
                     break;
 
                 case SETTING_MENU:
