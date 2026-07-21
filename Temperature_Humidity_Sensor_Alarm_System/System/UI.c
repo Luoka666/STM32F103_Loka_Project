@@ -91,7 +91,8 @@ void setting_change_humi_ui(void) {
 // 历史记录从环形缓冲区按时间顺序读取（最旧到最新），逐行显示
 void setting_history_ui() {
     uint8_t i;
-
+	
+	// 空行填充
     if (history_count == 0) {
         for (i = 0; i < HISTORY_SIZE; i++) {
             OLED_ShowString(i + 1, 1, "                ");
@@ -100,7 +101,7 @@ void setting_history_ui() {
     }
 
     // 环形缓冲区读取：从 write_index（最旧）开始，顺时针绕回
-    uint8_t start = (history_count < HISTORY_SIZE) ? 0 : write_index;
+    uint8_t start = (history_count < HISTORY_SIZE) ? 0 : write_index; //寻找最旧，没满最旧位置为0，满后。最旧位置为index
 
     for (i = 0; i < history_count; i++) {
         uint8_t idx = (start + i) % HISTORY_SIZE;

@@ -168,9 +168,9 @@ int main(void) {
 
                 case RUN:
                     if (data_Check(&temperature, &humidity)) {   // 读取成功才更新，忘记加if，所以之前返回值根本没被检查
-                        run_ui(temperature, humidity);
-                        usart_send(temperature, humidity);
-                        history_add(temperature, humidity);
+                        run_ui(temperature, humidity); // 画UI
+                        usart_send(temperature, humidity); // 串口传送实时数据
+                        history_add(temperature, humidity); // 将数据存储到队列
                     }
                     break;
 
