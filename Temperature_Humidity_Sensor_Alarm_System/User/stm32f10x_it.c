@@ -23,6 +23,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /** @addtogroup STM32F10x_StdPeriph_Template
   * @{
@@ -105,41 +107,35 @@ void UsageFault_Handler(void)
   * @param  None
   * @retval None
   */
-void SVC_Handler(void)
-{
-}
+// SVC / PendSV / SysTick taken over by FreeRTOS port.c
+// Vector table now points to vPortSVCHandler / xPortPendSVHandler / xPortSysTickHandler
 
-/**
-  * @brief  This function handles Debug Monitor exception.
-  * @param  None
-  * @retval None
-  */
 void DebugMon_Handler(void)
 {
 }
 
-/**
-  * @brief  This function handles PendSVC exception.
-  * @param  None
-  * @retval None
-  */
-void PendSV_Handler(void)
-{
-}
-
-/**
-  * @brief  This function handles SysTick Handler.
-  * @param  None
-  * @retval None
-  */
-
-
-
+// g_millis preserved for backward compatibility, incremented via FreeRTOS Tick Hook
 volatile uint32_t g_millis = 0;
-void SysTick_Handler(void)
+
+void vApplicationTickHook(void)
 {
-	 g_millis++;//直接在 stm32f10x_it.c 里写SysTick_Handler，避免重复定义
+    g_millis++;
 }
+
+void vApplicationMallocFailedHook(void)
+{
+    taskDISABLE_INTERRUPTS();
+    while (1);
+}
+
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char* pcTaskName)
+{
+    (void)xTask;
+    (void)pcTaskName;
+    taskDISABLE_INTERRUPTS();
+    while (1);
+}
+
 
 
 /******************************************************************************/

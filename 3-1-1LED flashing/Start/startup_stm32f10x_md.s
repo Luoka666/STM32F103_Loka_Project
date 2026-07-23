@@ -1,45 +1,16 @@
 ;******************** (C) COPYRIGHT 2011 STMicroelectronics ********************
-;* File Name          : startup_stm32f10x_md.s
-;* Author             : MCD Application Team
-;* Version            : V3.5.0
-;* Date               : 11-March-2011
-;* Description        : STM32F10x Medium Density Devices vector table for MDK-ARM 
-;*                      toolchain.  
-;*                      This module performs:
-;*                      - Set the initial SP
-;*                      - Set the initial PC == Reset_Handler
-;*                      - Set the vector table entries with the exceptions ISR address
-;*                      - Configure the clock system
-;*                      - Branches to __main in the C library (which eventually
-;*                        calls main()).
-;*                      After Reset the CortexM3 processor is in Thread mode,
-;*                      priority is Privileged, and the Stack is set to Main.
-;* <<< Use Configuration Wizard in Context Menu >>>   
-;*******************************************************************************
-; THE PRESENT FIRMWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-; WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
-; AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
-; INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-; CONTENT OF SUCH FIRMWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
-; INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
+; FreeRTOS 移植版 — 启动文件修改说明：
+;   SVC_Handler     → vPortSVCHandler      (向量表 + 弱定义)
+;   PendSV_Handler  → xPortPendSVHandler   (向量表 + 弱定义)
+;   SysTick_Handler → xPortSysTickHandler  (向量表 + 弱定义)
+;   栈大小: 0x400 → 0x800
 ;*******************************************************************************
 
-; Amount of memory (in bytes) allocated for Stack
-; Tailor this value to your application needs
-; <h> Stack Configuration
-;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
-; </h>
-
-Stack_Size      EQU     0x00000400
+Stack_Size      EQU     0x00000800
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
 __initial_sp
-
-
-; <h> Heap Configuration
-;   <o>  Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-; </h>
 
 Heap_Size       EQU     0x00000200
 
@@ -51,92 +22,86 @@ __heap_limit
                 PRESERVE8
                 THUMB
 
-
-; Vector Table Mapped to Address 0 at Reset
                 AREA    RESET, DATA, READONLY
                 EXPORT  __Vectors
                 EXPORT  __Vectors_End
                 EXPORT  __Vectors_Size
 
-__Vectors       DCD     __initial_sp               ; Top of Stack
-                DCD     Reset_Handler              ; Reset Handler
-                DCD     NMI_Handler                ; NMI Handler
-                DCD     HardFault_Handler          ; Hard Fault Handler
-                DCD     MemManage_Handler          ; MPU Fault Handler
-                DCD     BusFault_Handler           ; Bus Fault Handler
-                DCD     UsageFault_Handler         ; Usage Fault Handler
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
-                DCD     0                          ; Reserved
-                DCD     SVC_Handler                ; SVCall Handler
-                DCD     DebugMon_Handler           ; Debug Monitor Handler
-                DCD     0                          ; Reserved
-                DCD     PendSV_Handler             ; PendSV Handler
-                DCD     SysTick_Handler            ; SysTick Handler
+__Vectors       DCD     __initial_sp
+                DCD     Reset_Handler
+                DCD     NMI_Handler
+                DCD     HardFault_Handler
+                DCD     MemManage_Handler
+                DCD     BusFault_Handler
+                DCD     UsageFault_Handler
+                DCD     0
+                DCD     0
+                DCD     0
+                DCD     0
+                DCD     vPortSVCHandler            ; FreeRTOS
+                DCD     DebugMon_Handler
+                DCD     0
+                DCD     xPortPendSVHandler         ; FreeRTOS
+                DCD     xPortSysTickHandler        ; FreeRTOS
 
-                ; External Interrupts
-                DCD     WWDG_IRQHandler            ; Window Watchdog
-                DCD     PVD_IRQHandler             ; PVD through EXTI Line detect
-                DCD     TAMPER_IRQHandler          ; Tamper
-                DCD     RTC_IRQHandler             ; RTC
-                DCD     FLASH_IRQHandler           ; Flash
-                DCD     RCC_IRQHandler             ; RCC
-                DCD     EXTI0_IRQHandler           ; EXTI Line 0
-                DCD     EXTI1_IRQHandler           ; EXTI Line 1
-                DCD     EXTI2_IRQHandler           ; EXTI Line 2
-                DCD     EXTI3_IRQHandler           ; EXTI Line 3
-                DCD     EXTI4_IRQHandler           ; EXTI Line 4
-                DCD     DMA1_Channel1_IRQHandler   ; DMA1 Channel 1
-                DCD     DMA1_Channel2_IRQHandler   ; DMA1 Channel 2
-                DCD     DMA1_Channel3_IRQHandler   ; DMA1 Channel 3
-                DCD     DMA1_Channel4_IRQHandler   ; DMA1 Channel 4
-                DCD     DMA1_Channel5_IRQHandler   ; DMA1 Channel 5
-                DCD     DMA1_Channel6_IRQHandler   ; DMA1 Channel 6
-                DCD     DMA1_Channel7_IRQHandler   ; DMA1 Channel 7
-                DCD     ADC1_2_IRQHandler          ; ADC1_2
-                DCD     USB_HP_CAN1_TX_IRQHandler  ; USB High Priority or CAN1 TX
-                DCD     USB_LP_CAN1_RX0_IRQHandler ; USB Low  Priority or CAN1 RX0
-                DCD     CAN1_RX1_IRQHandler        ; CAN1 RX1
-                DCD     CAN1_SCE_IRQHandler        ; CAN1 SCE
-                DCD     EXTI9_5_IRQHandler         ; EXTI Line 9..5
-                DCD     TIM1_BRK_IRQHandler        ; TIM1 Break
-                DCD     TIM1_UP_IRQHandler         ; TIM1 Update
-                DCD     TIM1_TRG_COM_IRQHandler    ; TIM1 Trigger and Commutation
-                DCD     TIM1_CC_IRQHandler         ; TIM1 Capture Compare
-                DCD     TIM2_IRQHandler            ; TIM2
-                DCD     TIM3_IRQHandler            ; TIM3
-                DCD     TIM4_IRQHandler            ; TIM4
-                DCD     I2C1_EV_IRQHandler         ; I2C1 Event
-                DCD     I2C1_ER_IRQHandler         ; I2C1 Error
-                DCD     I2C2_EV_IRQHandler         ; I2C2 Event
-                DCD     I2C2_ER_IRQHandler         ; I2C2 Error
-                DCD     SPI1_IRQHandler            ; SPI1
-                DCD     SPI2_IRQHandler            ; SPI2
-                DCD     USART1_IRQHandler          ; USART1
-                DCD     USART2_IRQHandler          ; USART2
-                DCD     USART3_IRQHandler          ; USART3
-                DCD     EXTI15_10_IRQHandler       ; EXTI Line 15..10
-                DCD     RTCAlarm_IRQHandler        ; RTC Alarm through EXTI Line
-                DCD     USBWakeUp_IRQHandler       ; USB Wakeup from suspend
+                DCD     WWDG_IRQHandler
+                DCD     PVD_IRQHandler
+                DCD     TAMPER_IRQHandler
+                DCD     RTC_IRQHandler
+                DCD     FLASH_IRQHandler
+                DCD     RCC_IRQHandler
+                DCD     EXTI0_IRQHandler
+                DCD     EXTI1_IRQHandler
+                DCD     EXTI2_IRQHandler
+                DCD     EXTI3_IRQHandler
+                DCD     EXTI4_IRQHandler
+                DCD     DMA1_Channel1_IRQHandler
+                DCD     DMA1_Channel2_IRQHandler
+                DCD     DMA1_Channel3_IRQHandler
+                DCD     DMA1_Channel4_IRQHandler
+                DCD     DMA1_Channel5_IRQHandler
+                DCD     DMA1_Channel6_IRQHandler
+                DCD     DMA1_Channel7_IRQHandler
+                DCD     ADC1_2_IRQHandler
+                DCD     USB_HP_CAN1_TX_IRQHandler
+                DCD     USB_LP_CAN1_RX0_IRQHandler
+                DCD     CAN1_RX1_IRQHandler
+                DCD     CAN1_SCE_IRQHandler
+                DCD     EXTI9_5_IRQHandler
+                DCD     TIM1_BRK_IRQHandler
+                DCD     TIM1_UP_IRQHandler
+                DCD     TIM1_TRG_COM_IRQHandler
+                DCD     TIM1_CC_IRQHandler
+                DCD     TIM2_IRQHandler
+                DCD     TIM3_IRQHandler
+                DCD     TIM4_IRQHandler
+                DCD     I2C1_EV_IRQHandler
+                DCD     I2C1_ER_IRQHandler
+                DCD     I2C2_EV_IRQHandler
+                DCD     I2C2_ER_IRQHandler
+                DCD     SPI1_IRQHandler
+                DCD     SPI2_IRQHandler
+                DCD     USART1_IRQHandler
+                DCD     USART2_IRQHandler
+                DCD     USART3_IRQHandler
+                DCD     EXTI15_10_IRQHandler
+                DCD     RTCAlarm_IRQHandler
+                DCD     USBWakeUp_IRQHandler
 __Vectors_End
 
 __Vectors_Size  EQU  __Vectors_End - __Vectors
 
                 AREA    |.text|, CODE, READONLY
 
-; Reset handler
-Reset_Handler    PROC
-                 EXPORT  Reset_Handler             [WEAK]
+Reset_Handler   PROC
+                EXPORT  Reset_Handler             [WEAK]
      IMPORT  __main
      IMPORT  SystemInit
-                 LDR     R0, =SystemInit
-                 BLX     R0
-                 LDR     R0, =__main
-                 BX      R0
-                 ENDP
-
-; Dummy Exception Handlers (infinite loops which can be modified)
+                LDR     R0, =SystemInit
+                BLX     R0
+                LDR     R0, =__main
+                BX      R0
+                ENDP
 
 NMI_Handler     PROC
                 EXPORT  NMI_Handler                [WEAK]
@@ -162,8 +127,8 @@ UsageFault_Handler\
                 EXPORT  UsageFault_Handler         [WEAK]
                 B       .
                 ENDP
-SVC_Handler     PROC
-                EXPORT  SVC_Handler                [WEAK]
+vPortSVCHandler PROC
+                EXPORT  vPortSVCHandler            [WEAK]
                 B       .
                 ENDP
 DebugMon_Handler\
@@ -171,17 +136,16 @@ DebugMon_Handler\
                 EXPORT  DebugMon_Handler           [WEAK]
                 B       .
                 ENDP
-PendSV_Handler  PROC
-                EXPORT  PendSV_Handler             [WEAK]
+xPortPendSVHandler PROC
+                EXPORT  xPortPendSVHandler         [WEAK]
                 B       .
                 ENDP
-SysTick_Handler PROC
-                EXPORT  SysTick_Handler            [WEAK]
+xPortSysTickHandler PROC
+                EXPORT  xPortSysTickHandler        [WEAK]
                 B       .
                 ENDP
 
 Default_Handler PROC
-
                 EXPORT  WWDG_IRQHandler            [WEAK]
                 EXPORT  PVD_IRQHandler             [WEAK]
                 EXPORT  TAMPER_IRQHandler          [WEAK]
@@ -271,27 +235,22 @@ RTCAlarm_IRQHandler
 USBWakeUp_IRQHandler
 
                 B       .
-
                 ENDP
 
                 ALIGN
 
-;*******************************************************************************
-; User Stack and Heap initialization
-;*******************************************************************************
-                 IF      :DEF:__MICROLIB           
-                
+                 IF      :DEF:__MICROLIB
+
                  EXPORT  __initial_sp
                  EXPORT  __heap_base
                  EXPORT  __heap_limit
-                
+
                  ELSE
-                
+
                  IMPORT  __use_two_region_memory
                  EXPORT  __user_initial_stackheap
-                 
-__user_initial_stackheap
 
+__user_initial_stackheap
                  LDR     R0, =  Heap_Mem
                  LDR     R1, =(Stack_Mem + Stack_Size)
                  LDR     R2, = (Heap_Mem +  Heap_Size)
@@ -299,9 +258,5 @@ __user_initial_stackheap
                  BX      LR
 
                  ALIGN
-
                  ENDIF
-
                  END
-
-;******************* (C) COPYRIGHT 2011 STMicroelectronics *****END OF FILE*****

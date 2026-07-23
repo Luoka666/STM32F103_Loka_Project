@@ -30,7 +30,7 @@
 ;   <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ; </h>
 
-Stack_Size      EQU     0x00000400
+Stack_Size      EQU     0x00000800       ; FreeRTOS
 
                 AREA    STACK, NOINIT, READWRITE, ALIGN=3
 Stack_Mem       SPACE   Stack_Size
@@ -69,11 +69,11 @@ __Vectors       DCD     __initial_sp               ; Top of Stack
                 DCD     0                          ; Reserved
                 DCD     0                          ; Reserved
                 DCD     0                          ; Reserved
-                DCD     SVC_Handler                ; SVCall Handler
+                DCD     vPortSVCHandler            ; FreeRTOS SVC
                 DCD     DebugMon_Handler           ; Debug Monitor Handler
                 DCD     0                          ; Reserved
-                DCD     PendSV_Handler             ; PendSV Handler
-                DCD     SysTick_Handler            ; SysTick Handler
+                DCD     xPortPendSVHandler         ; FreeRTOS PendSV
+                DCD     xPortSysTickHandler        ; FreeRTOS SysTick
 
                 ; External Interrupts
                 DCD     WWDG_IRQHandler            ; Window Watchdog
@@ -162,8 +162,8 @@ UsageFault_Handler\
                 EXPORT  UsageFault_Handler         [WEAK]
                 B       .
                 ENDP
-SVC_Handler     PROC
-                EXPORT  SVC_Handler                [WEAK]
+vPortSVCHandler PROC
+                EXPORT  vPortSVCHandler            [WEAK]
                 B       .
                 ENDP
 DebugMon_Handler\
@@ -171,12 +171,12 @@ DebugMon_Handler\
                 EXPORT  DebugMon_Handler           [WEAK]
                 B       .
                 ENDP
-PendSV_Handler  PROC
-                EXPORT  PendSV_Handler             [WEAK]
+xPortPendSVHandler PROC
+                EXPORT  xPortPendSVHandler         [WEAK]
                 B       .
                 ENDP
-SysTick_Handler PROC
-                EXPORT  SysTick_Handler            [WEAK]
+xPortSysTickHandler PROC
+                EXPORT  xPortSysTickHandler        [WEAK]
                 B       .
                 ENDP
 

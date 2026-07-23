@@ -3,7 +3,7 @@
 
 uint8_t history_temp[HISTORY_SIZE] = {0};
 uint8_t history_humi[HISTORY_SIZE] = {0};
-uint8_t history_count = 0;   // 实际存入数据条数
+uint8_t history_count  = 0;   // 实际存入数据条数
 uint8_t write_index   = 0;   // 环形缓冲区写指针，满时最旧，即history_count == HISTORY_SIZE
 
 /*
