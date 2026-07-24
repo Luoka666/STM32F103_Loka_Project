@@ -35,6 +35,7 @@
 ".\objects\key.o"
 ".\objects\oled.o"
 ".\objects\buzzer.o"
+".\objects\task_sensor.o"
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"
 ".\objects\heap_4.o"

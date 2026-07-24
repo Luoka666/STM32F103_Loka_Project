@@ -336,7 +336,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Start;.\Library;.\User;.\System;.\Hardware;.\FreeRTOS\Source\include;.\FreeRTOS\Source\portable\MemMang;.\FreeRTOS\Source\portable\RVDS\ARM_CM3;.\FreeRTOS\Source</IncludePath>
+              <IncludePath>.\Start;.\Library;.\System;.\Hardware;.\Tasks;.\User;.\FreeRTOS\Source\include;.\FreeRTOS\Source\portable\MemMang;.\FreeRTOS\Source\portable\RVDS\ARM_CM3;.\FreeRTOS\Source</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -759,6 +759,21 @@
               <FileName>buzzer.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\buzzer.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Tasks</GroupName>
+          <Files>
+            <File>
+              <FileName>task_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\task_sensor.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\task_sensor.h</FilePath>
             </File>
           </Files>
         </Group>
