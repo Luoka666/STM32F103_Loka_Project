@@ -14,6 +14,7 @@
 #include "task.h"           // 任务相关所需 API（xTaskCreate、vTaskStartScheduler）
 #include "queue.h"          // 队列相关所需 API（xQueueCreate、xQueueSend）
 #include "task_sensor.h"    // 传感器任务声明（SensorData_t、sensorQueue、vTask_Sensor）
+#include "task_display.h"
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
@@ -41,10 +42,11 @@ int main(void) {
 
     // 创建传感器采集任务（优先级 2，栈 128 字）
     xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 2, NULL);
+	// 创建oled显示任务（优先级 1，栈 256 字）
+	xTaskCreate(vTask_Display, "Display", 256, NULL, 1, NULL);  // 优先级 1，最低
 
     // 启动调度器
     vTaskStartScheduler();
     while (1);
 
-    
 }

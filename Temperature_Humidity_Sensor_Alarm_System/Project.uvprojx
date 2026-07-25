@@ -775,6 +775,16 @@
               <FileType>5</FileType>
               <FilePath>.\Tasks\task_sensor.h</FilePath>
             </File>
+            <File>
+              <FileName>task_display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\task_display.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_display.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\task_display.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

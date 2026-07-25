@@ -146,6 +146,18 @@ UI 刷新、传感器采集等任务按 100ms 节拍执行，避免屏幕闪烁
 ---
 
 ##  踩坑记录与调试经验
+
+### 故障现象00
+OLED 黑屏不亮，LED 常亮不闪烁。LED_Init() 被放在 while(1) 循环内部，每次循环都重新初始化 GPIO，电平不断被复位到默认值。
+
+### 故障原因00
+GPIO 初始化函数误放在主循环内，每次迭代都将引脚重新配置，导致输出电平被重置。
+
+### 解决方案00
+将 `LED_Init()`、`OLED_Init()` 等所有外设初始化函数移到 `while(1)` 之前，确保只执行一次。
+
+---
+
 ### 故障现象01
 按键完全失效：烧录后系统停留在 STOP 界面，按下任何按键均无反应。
 
@@ -268,12 +280,61 @@ if (data_Check(&temperature, &humidity)) {
 }
 ```
 
+##  FreeRTOS 移植踩坑记录
+
+### 故障现象06
+编译报错 `identifier "sensorQueue" is undefined` 等符号未定义。
+
+### 故障原因06
+新建的 `Tasks/` 文件夹路径未添加到 Keil 的 C/C++ 包含路径中，编译器找不到 `task_sensor.h`。
+
+### 解决方案06
+Options for Target → C/C++ → Include Paths 添加 `Tasks` 文件夹路径。
+
+---
+
+### 故障现象07
+串口持续打印 `DHT11 fail`，传感器在 FreeRTOS 下完全无法通信。
+
+### 故障原因07
+DHT11 通信时序为微秒级。FreeRTOS 的 SysTick 中断（每 1ms 一次）和任务调度会打断 DHT11 电平信号，导致通信失败。
+
+### 解决方案07
+- `taskENTER_CRITICAL()`：成功率从 0% 提升到约 20%，但仍有中断干扰
+- `__disable_irq()`：彻底关闭所有中断，成功率 100%，但会暂停 SysTick 心跳
+- `vTaskSuspendAll()` + `xTaskResumeAll()`：**最终方案**，只挂起任务调度不关中断，兼顾成功率与系统实时性
+
+---
+
+### 故障现象08
+传感器任务发送约 6 次数据（队列深度 5）后停止，串口不再有输出。
+
+### 故障原因08
+队列深度为 5，使用 `portMAX_DELAY` 等待发送。队列满后无消费者任务取走数据，传感器任务被永久阻塞在 `xQueueSend()`。
+
+### 解决方案08
+创建显示任务（`vTask_Display`）作为消费者，持续从队列取数据并刷新 OLED，释放队列空间。
+
+---
+
+### 故障现象09
+编译报错 `L6200E: Symbol SysTick_Handler multiply defined`。
+
+### 故障原因09
+`stm32f10x_it.c` 和 FreeRTOS 的 `port.c` 同时定义了 `SysTick_Handler`，链接器发现重名符号。
+
+### 解决方案09
+- 启动文件向量表将 `SysTick_Handler` 改为 `xPortSysTickHandler`，指向 FreeRTOS 实现
+- `stm32f10x_it.c` 中删除 `SysTick_Handler`，改为 `vApplicationTickHook()` 通过 FreeRTOS Tick Hook 递增 `g_millis`
+
+---
+
 ##  待优化方向（未来计划）
 按键扫描改为非阻塞式（消除 while(等待松手) 阻塞风险）
 
 阈值数据写入内部 Flash，实现掉电保存
 
-移植 FreeRTOS，将传感器采集、UI 刷新、报警处理拆分为独立任务
+移植 FreeRTOS 剩余模块：将报警处理、历史记录存储、按键扫描拆分为独立任务
 
 开发 Python 上位机，通过串口实现数据可视化与远程控制（已完成，见[配套上位机](https://github.com/Luoka666/upper_computer)）
 
