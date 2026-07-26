@@ -110,25 +110,16 @@ uint8_t data_Check(uint8_t *temp, uint8_t *humi) {
     DHT11_Accept();
     DATA_INPUT_Mode();
     if (DHT11_Send_check() == 0) {
-
-        return 0;
-
+        return 0;  // 握手失败：传感器未响应
     }
-    // 存储数据
     for (int i = 0;i < 5;i++) {
-
         data[i] = DHT11_Send();
-
     }
-    // 4. 校验数据：前4个字节相加 == 第5个字节（校验和）
-    if ((data[0] + data[1] + data[2] + data[3]) == data[4])
-    {
-        *humi = data[0]; // 湿度整数位（小数位buf[1]一般为0，DHT11精度不高）
-        *temp = data[2]; // 温度整数位（小数位buf[3]一般为0）
+    if ((data[0] + data[1] + data[2] + data[3]) == data[4]) {
+        *humi = data[0];
+        *temp = data[2];
         return 1;       // 读取成功
-    }
-    else
-    {
+    } else {
         return 0; // 校验失败
     }
 

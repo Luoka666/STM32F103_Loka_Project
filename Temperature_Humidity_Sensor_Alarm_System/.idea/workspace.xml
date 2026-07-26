@@ -8,8 +8,19 @@
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
   </component>
+  <component name="CMakePresetLoader">{
+  &quot;useNewFormat&quot;: true
+}</component>
   <component name="CMakeProjectFlavorService">
     <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeReloadState">
+    <option name="reloaded" value="true" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="Temperature_Humidity_Sensor_Alarm_System" targetName="Temperature_Humidity_Sensor_Alarm_System" />
+    </generated>
   </component>
   <component name="CMakeSettings">
     <configurations>
@@ -18,8 +29,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
+      <change afterPath="$PROJECT_DIR$/Tasks/task_alarm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/4-1 OLED显示屏.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Listings/startup_stm32f10x_md.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Listings/startup_stm32f10x_md.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.lnp" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.lnp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/alarm.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/dht11.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/dht11.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_display.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_display.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_sensor.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_sensor.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project.uvprojx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvprojx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/System/alarm.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/alarm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/System/dht11.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/dht11.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_display.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_display.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tasks/task_sensor.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_sensor.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_sensor.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_sensor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UI.h" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +71,9 @@
     <option name="debugProfileId" value="ffc9293e-e6bc-4875-a6c0-e65a05a257ba" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="280" />
+    <option name="cachedIndexableFilesCount" value="302" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -53,62 +86,68 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0000000000000466" />
-      <entry key="S10" value="1.0000002721224628" />
-      <entry key="S30" value="1.0158323095948112" />
-      <entry key="S60" value="1.3828199085550328" />
-      <entry key="M2" value="3.2436999557254023" />
-      <entry key="M5" value="7.9081647282771765" />
-      <entry key="M10" value="11.154276590068154" />
-      <entry key="M15" value="12.558284228428889" />
-      <entry key="M30" value="14.163608834229075" />
-      <entry key="H1" value="15.050893409662311" />
-      <entry key="H2" value="15.517449570981494" />
-      <entry key="H4" value="15.756690779824526" />
-      <entry key="D1" value="15.959162965253311" />
-      <entry key="W1" value="15.994159106677893" />
+      <entry key="MS100" value="1.0000000000069313" />
+      <entry key="MS500" value="1.0062962139343985" />
+      <entry key="S2" value="1.547363405630031" />
+      <entry key="S5" value="2.866811637362111" />
+      <entry key="S10" value="3.995511545078948" />
+      <entry key="S30" value="5.200246724340431" />
+      <entry key="S60" value="5.851428117617868" />
+      <entry key="M2" value="8.23612513109385" />
+      <entry key="M5" value="16.753675427028796" />
+      <entry key="M10" value="24.971196928748196" />
+      <entry key="M15" value="29.14059079841849" />
+      <entry key="M30" value="34.378366835912004" />
+      <entry key="H1" value="37.49284776618711" />
+      <entry key="H2" value="39.19404870835726" />
+      <entry key="H4" value="40.083493256292314" />
+      <entry key="D1" value="40.84533116568586" />
+      <entry key="W1" value="40.97785697846301" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="0.0" />
-      <entry key="S2" value="0.0" />
-      <entry key="S5" value="0.0" />
-      <entry key="S10" value="0.0" />
-      <entry key="S30" value="0.0" />
-      <entry key="S60" value="0.0" />
-      <entry key="M2" value="0.0" />
-      <entry key="M5" value="0.0" />
-      <entry key="M10" value="0.0" />
-      <entry key="M15" value="0.0" />
-      <entry key="M30" value="0.0" />
-      <entry key="H1" value="0.0" />
-      <entry key="H2" value="0.0" />
-      <entry key="H4" value="0.0" />
-      <entry key="D1" value="0.0" />
-      <entry key="W1" value="0.0" />
+      <entry key="MS500" value="2.0442530015746338E-145" />
+      <entry key="S2" value="6.724092218874769E-37" />
+      <entry key="S5" value="3.396670851928138E-15" />
+      <entry key="S10" value="5.828096474774708E-8" />
+      <entry key="S30" value="0.0038771170339109025" />
+      <entry key="S60" value="0.062266500093637066" />
+      <entry key="M2" value="0.24953256319293682" />
+      <entry key="M5" value="0.5739193811970368" />
+      <entry key="M10" value="0.7575746703771431" />
+      <entry key="M15" value="0.8310305007463891" />
+      <entry key="M30" value="0.9116087432371355" />
+      <entry key="H1" value="0.954782039649435" />
+      <entry key="H2" value="0.9771294897041206" />
+      <entry key="H4" value="0.9884986037947248" />
+      <entry key="D1" value="0.9980738492769773" />
+      <entry key="W1" value="0.9997246081934561" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9201876506248751" />
-      <entry key="MS500" value="0.9835020740262483" />
-      <entry key="S2" value="0.9958497530944581" />
-      <entry key="S5" value="0.998337829704413" />
-      <entry key="S10" value="0.9991688411685324" />
-      <entry key="S30" value="1.0155504421541117" />
-      <entry key="S60" value="1.3825977489216543" />
-      <entry key="M2" value="3.2433204713659944" />
-      <entry key="M5" value="7.907698313116108" />
-      <entry key="M10" value="11.153925693922938" />
-      <entry key="M15" value="12.558015485113453" />
-      <entry key="M30" value="14.163454296889201" />
-      <entry key="H1" value="15.050810513954977" />
-      <entry key="H2" value="15.51740663654826" />
-      <entry key="H4" value="15.756668930541732" />
-      <entry key="D1" value="15.959159269735505" />
-      <entry key="W1" value="15.994158577413085" />
+      <entry key="MS100" value="4.855569710261526E-5" />
+      <entry key="MS500" value="0.14261068196132926" />
+      <entry key="S2" value="1.1219371157385942" />
+      <entry key="S5" value="2.6141270390942855" />
+      <entry key="S10" value="3.830710049850832" />
+      <entry key="S30" value="5.1337409689581195" />
+      <entry key="S60" value="5.870100150824227" />
+      <entry key="M2" value="8.446399226727786" />
+      <entry key="M5" value="17.293525827850658" />
+      <entry key="M10" value="25.705083262858558" />
+      <entry key="M15" value="29.95387444752125" />
+      <entry key="M30" value="35.27997239256352" />
+      <entry key="H1" value="38.442313274622215" />
+      <entry key="H2" value="40.16843675135425" />
+      <entry key="H4" value="41.07059975961235" />
+      <entry key="D1" value="41.84316997852579" />
+      <entry key="W1" value="41.97754793540189" />
     </decayedShown>
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2026" />
+    <option name="minorVersion" value="2" />
+    <option name="productBranch" value="Classic" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 3
@@ -135,6 +174,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;CMake 应用程序.Temperature_Humidity_Sensor_Alarm_System.executor&quot;: &quot;Run&quot;,
     &quot;CidrDebugProfileConversion&quot;: &quot;true&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
@@ -144,6 +184,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.west.config.association.type.startup.service&quot;: &quot;true&quot;,
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
@@ -151,7 +192,7 @@
     &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/GithubHouse/STM32F103_Loka_Project/4-1 OLED显示屏&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/GithubHouse/STM32F103_Loka_Project/Temperature_Humidity_Sensor_Alarm_System&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -162,6 +203,13 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="Temperature_Humidity_Sensor_Alarm_System" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" RUN_TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="" />
@@ -174,10 +222,21 @@
       <workItem from="1784619191894" duration="25000" />
       <workItem from="1784797901040" duration="47000" />
       <workItem from="1784956927186" duration="634000" />
+      <workItem from="1785070309407" duration="183000" />
+      <workItem from="1785070644093" duration="10000" />
+      <workItem from="1785070858904" duration="153000" />
+      <workItem from="1785072986501" duration="2271000" />
+      <workItem from="1785076402549" duration="1551000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VCPKGProject">
+    <isAutomaticCheckingOnLaunch value="false" />
+    <isAutomaticFoundErrors value="true" />
+    <isAutomaticReloadCMake value="true" />
+    <isAutomaticBootstrapAfterUpdate value="false" />
   </component>
 </project>

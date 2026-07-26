@@ -26,7 +26,7 @@ void init_alarm(void) {
     LED_Init();
 	Buzzer_Init();
 }
-//利用整体的while循环
+//利用整体的while循环，非阻塞报警
 void alarm_run(uint8_t temp, uint8_t humi) {
 
 

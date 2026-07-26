@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>Target 1</TargetName>
+      <TargetName>FreeRTOS_Rebuild</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060528::V5.06 update 5 (build 528)::ARMCC</pCCUsed>
@@ -784,6 +784,16 @@
               <FileName>task_display.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Tasks\task_display.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_alarm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\task_alarm.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_alarm.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\task_alarm.h</FilePath>
             </File>
           </Files>
         </Group>
