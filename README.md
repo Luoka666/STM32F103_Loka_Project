@@ -2,7 +2,7 @@
 
 从零开始学习 STM32F103C8T6 的 15 个实战项目，涵盖 GPIO、中断、定时器、PWM、通信协议等外设，最终以温湿度监测与报警系统作为综合实战。
 
-> [温湿度监测与报警系统](Temperature_Humidity_Sensor_Alarm_System/) 配套 [Python 上位机](https://github.com/Luoka666/upper_computer)，实现数据可视化闭环。
+> 温湿度监测与报警系统 — [裸机版](Temperature_Humidity_Sensor_Alarm_System_BareMetal/) | [FreeRTOS 版](Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/)，配套 [Python 上位机](https://github.com/Luoka666/upper_computer)，实现数据可视化闭环。
 
 ## 项目列表
 
@@ -22,4 +22,4 @@
 | 6-2-2 | 外部时钟中断 | EXTI 外部中断 |
 | 6-3-1 | PWM 呼吸灯 | TIM PWM 输出 |
 | 6-3-2 | 舵机控制 | PWM 占空比控制 |
-| — | **温湿度监测与报警系统** | **综合实战：GPIO + I2C + USART + 定时器 + 状态机** |
+| — | **温湿度监测与报警系统**（[裸机](Temperature_Humidity_Sensor_Alarm_System_BareMetal/) \| [FreeRTOS](Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/)） | **综合实战：GPIO + I2C + USART + 定时器 + 状态机 + FreeRTOS** |
