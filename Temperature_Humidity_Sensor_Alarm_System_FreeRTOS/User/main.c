@@ -18,6 +18,7 @@
 #include "task_sensor.h"    // 传感器任务声明（SensorData_t、sensorQueue、vTask_Sensor）
 #include "task_display.h"
 #include "task_alarm.h"
+#include "task_key.h"
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
@@ -27,8 +28,9 @@ uint8_t threshold_menu_index = 0;
 //初始报警阈值
 uint8_t temp_threshold = 40, humi_threshold = 60; // 报警阈值
 
-QueueHandle_t sensorQueue;
+QueueHandle_t sensorQueue; // 创建 struct QueueDefinition * 类型的指针变量，定义一个结构体指针变量 sensorQueue
 QueueHandle_t alarmQueue;
+QueueHandle_t keyQueue;
 
 // 在 main 函数里，硬件初始化之后，创建队列和任务
 int main(void) {
@@ -47,6 +49,8 @@ int main(void) {
     sensorQueue = xQueueCreate(5, sizeof(SensorData_t));
 	// 创建报警队列（5 个槽位）
 	alarmQueue = xQueueCreate(5, sizeof(SensorData_t));
+	// 创建按键队列（深度 5，每个元素是 uint8_t）
+	keyQueue = xQueueCreate(5, sizeof(uint8_t));
 
     // 创建传感器采集任务（优先级 2，栈 128 字）
     xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 2, NULL);
@@ -54,6 +58,8 @@ int main(void) {
 	xTaskCreate(vTask_Display, "Display", 256, NULL, 1, NULL);  // 优先级 1，最低
 	// 创建报警任务（优先级 3，栈 128 字）
 	xTaskCreate(vTask_Alarm, "Alarm", 128, NULL, 3, NULL); // 报警任务紧急，优先度最高
+	// 创建按键任务（优先级 2，栈 128 字）
+	xTaskCreate(vTask_Key, "Key", 128, NULL, 2, NULL);
 	
     // 启动调度器
     vTaskStartScheduler();

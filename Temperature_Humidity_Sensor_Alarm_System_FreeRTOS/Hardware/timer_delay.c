@@ -24,7 +24,7 @@ void Delay_us_TIM(uint16_t xus) {
 
 // 硬件定时器毫秒延时（最大值约 65ms，因为计数器是 16 位、1MHz）
 void Delay_ms_TIM(uint16_t xms) {
-    uint16_t target = xms * 1000;       // 毫秒 → 微秒
+    uint16_t target = xms * 1000;       // 毫秒到微秒
     TIM_SetCounter(TIM2, 0);            // 计数器清零
     TIM_Cmd(TIM2, ENABLE);              // 启动定时器
     while (TIM_GetCounter(TIM2) < target); // 等待计数到达目标值

@@ -29,7 +29,8 @@ void vTask_Alarm(void* pvParameters) {
                 LED1_OFF();
                 Buzzer_off();
                 // 如果不需要实时更新，可以短暂延时避免频繁轮询
-                vTaskDelay(pdMS_TO_TICKS(200));
+				// 不延时，让 xQueueReceive 自然阻塞，让生产者和消费者速度同步
+//                vTaskDelay(pdMS_TO_TICKS(200));// 未超阈值：关灯，什么都不做，立刻回去等下一条数据，防止队列阻塞
             }
         }
     }

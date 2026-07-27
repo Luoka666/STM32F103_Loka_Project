@@ -29,16 +29,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/timer_delay.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/timer_delay.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.htm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.lnp" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.lnp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/dht11.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/dht11.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_alarm.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/task_sensor.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_sensor.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/timer_delay.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/timer_delay.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvprojx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvprojx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_alarm.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_alarm.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tasks/task_sensor.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_sensor.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
     </list>
@@ -53,13 +60,14 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_D:/GithubHouse/STM32F103_Loka_Project/Temperature_Humidity_Sensor_Alarm_System" value="3AqrPUU2y51tfU2hDhX59PcDtJR" />
+      <entry key="_D:/GithubHouse/STM32F103_Loka_Project/Temperature_Humidity_Sensor_Alarm_System_FreeRTOS" value="3H4xu9ALhnbxtXmL0v7azTH2mHC" />
     </persistenceIdMap>
   </component>
   <component name="CurrentDebugProfile">
     <option name="debugProfileId" value="ffc9293e-e6bc-4875-a6c0-e65a05a257ba" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="302" />
+    <option name="cachedIndexableFilesCount" value="312" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
@@ -156,6 +164,9 @@
       </template>
     </option>
   </component>
+  <component name="ProjectStatusUIService"><![CDATA[{
+  "uiKindId": "Widget"
+}]]></component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -180,7 +191,7 @@
     &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/GithubHouse/STM32F103_Loka_Project/Temperature_Humidity_Sensor_Alarm_System&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/GithubHouse/STM32F103_Loka_Project/Temperature_Humidity_Sensor_Alarm_System_FreeRTOS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -192,6 +203,11 @@
   }
 }</component>
   <component name="RunManager">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Temperature_Humidity_Sensor_Alarm_System" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" RUN_TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -217,6 +233,8 @@
       <workItem from="1785076402549" duration="1551000" />
       <workItem from="1785128047456" duration="1269000" />
       <workItem from="1785129847066" duration="679000" />
+      <workItem from="1785141363449" duration="41000" />
+      <workItem from="1785141443695" duration="310000" />
     </task>
     <servers />
   </component>

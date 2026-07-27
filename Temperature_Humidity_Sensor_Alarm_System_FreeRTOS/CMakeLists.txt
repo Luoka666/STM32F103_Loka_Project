@@ -128,4 +128,5 @@ add_executable(Temperature_Humidity_Sensor_Alarm_System
         User/stm32f10x_it_old.c
         Tasks/task_alarm.c
         Tasks/task_alarm.h
+        Tasks/task_key.c
 )

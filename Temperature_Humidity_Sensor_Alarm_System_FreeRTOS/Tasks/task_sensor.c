@@ -13,21 +13,8 @@ void vTask_Sensor(void* pvParameters) {
 
     while (1) {
 		
-        // DHT11 通信是微秒级时序，__disable_irq 彻底关中断保护时序
-        __disable_irq();
-        uint8_t result = data_Check(&temperature, &humidity);
-        __enable_irq();
-		
-//        taskYIELD();  // 中断恢复后让 FreeRTOS 跑完积压的 tick
-		
-//		  // 进入临界区：关闭所有中断，保护 DHT11 的微秒级通信时序
-//        taskENTER_CRITICAL();
-//        uint8_t result = data_Check(&temperature, &humidity);
-//        taskEXIT_CRITICAL();  // 退出临界区：恢复中断
- 
-		
         // 采集数据（直接调用原来写好的底层驱动函数）
-        if (result) {  // 采集成功
+        if (data_Check(&temperature, &humidity)) {  // 采集成功，直接采集，不需要关中断了
             data.temperature = temperature;//拿取数据
             data.humidity = humidity;
 			usart_send(data.temperature, data.humidity);//验证是否采集成功
