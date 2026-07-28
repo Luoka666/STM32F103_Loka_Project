@@ -31,22 +31,21 @@
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/timer_delay.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/timer_delay.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project.lnp" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.lnp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/dht11.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/dht11.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/task_alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_alarm.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/task_sensor.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_sensor.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/timer_delay.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/timer_delay.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_display.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_display.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_key.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvprojx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvprojx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_alarm.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_alarm.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_sensor.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_sensor.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_display.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_display.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_key.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_key.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_key.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_key.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -67,7 +66,7 @@
     <option name="debugProfileId" value="ffc9293e-e6bc-4875-a6c0-e65a05a257ba" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="312" />
+    <option name="cachedIndexableFilesCount" value="315" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
@@ -164,9 +163,9 @@
       </template>
     </option>
   </component>
-  <component name="ProjectStatusUIService"><![CDATA[{
-  "uiKindId": "Widget"
-}]]></component>
+  <component name="ProjectStatusUIService">{
+  &quot;uiKindId&quot;: &quot;Widget&quot;
+}</component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -203,12 +202,12 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+    <configuration name="Temperature_Humidity_Sensor_Alarm_System" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" RUN_TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System">
       <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Temperature_Humidity_Sensor_Alarm_System" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" RUN_TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -235,6 +234,7 @@
       <workItem from="1785129847066" duration="679000" />
       <workItem from="1785141363449" duration="41000" />
       <workItem from="1785141443695" duration="310000" />
+      <workItem from="1785225071944" duration="1184000" />
     </task>
     <servers />
   </component>

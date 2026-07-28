@@ -1,5 +1,7 @@
 #include "stm32f10x.h"
 #include "OLED_Font.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /*引脚配置*/
 #define OLED_W_SCL(x)		GPIO_WriteBit(GPIOB, GPIO_Pin_8, (BitAction)(x))
@@ -72,11 +74,13 @@ void OLED_I2C_SendByte(uint8_t Byte)
   */
 void OLED_WriteCommand(uint8_t Command)
 {
+	taskENTER_CRITICAL();           // 保护软件 I2C 不被任务切换打断
 	OLED_I2C_Start();
 	OLED_I2C_SendByte(0x78);		//从机地址
 	OLED_I2C_SendByte(0x00);		//写命令
-	OLED_I2C_SendByte(Command); 
+	OLED_I2C_SendByte(Command);
 	OLED_I2C_Stop();
+	taskEXIT_CRITICAL();
 }
 
 /**
@@ -86,11 +90,13 @@ void OLED_WriteCommand(uint8_t Command)
   */
 void OLED_WriteData(uint8_t Data)
 {
+	taskENTER_CRITICAL();
 	OLED_I2C_Start();
 	OLED_I2C_SendByte(0x78);		//从机地址
 	OLED_I2C_SendByte(0x40);		//写数据
 	OLED_I2C_SendByte(Data);
 	OLED_I2C_Stop();
+	taskEXIT_CRITICAL();
 }
 
 /**

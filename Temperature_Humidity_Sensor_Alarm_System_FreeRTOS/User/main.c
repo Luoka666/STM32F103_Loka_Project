@@ -19,15 +19,19 @@
 #include "task_display.h"
 #include "task_alarm.h"
 #include "task_key.h"
+#include "task_statemachine.h"
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
-uint8_t keyNum = 0;
+SystemState currentState = STOP;
 uint8_t menu_index = 0;
 uint8_t threshold_menu_index = 0;
+
 //初始报警阈值
 uint8_t temp_threshold = 40, humi_threshold = 60; // 报警阈值
 
+SemaphoreHandle_t oledMutex;
+QueueHandle_t keyQueue;
 QueueHandle_t sensorQueue; // 创建 struct QueueDefinition * 类型的指针变量，定义一个结构体指针变量 sensorQueue
 QueueHandle_t alarmQueue;
 QueueHandle_t keyQueue;
@@ -43,23 +47,32 @@ int main(void) {
 	TIM2_Delay_Init();  // 初始化硬件定时器延时
     init_alarm(); 
     OLED_Clear();
-
-
+	
+	stop_ui();// 开机后主动画一次 STOP 界面，否则oled会显示黑屏
+	
 	// 创建传感器数据队列（5 个槽位） 
     sensorQueue = xQueueCreate(5, sizeof(SensorData_t));
 	// 创建报警队列（5 个槽位）
 	alarmQueue = xQueueCreate(5, sizeof(SensorData_t));
 	// 创建按键队列（深度 5，每个元素是 uint8_t）
 	keyQueue = xQueueCreate(5, sizeof(uint8_t));
-
+	// 互斥锁，保护oled每次只能被一个任务调用
+	oledMutex = xSemaphoreCreateMutex();
+	
+	/*Sensor 优先级提到 3 → 谁也不能抢它。
+	Alarm 降到 2 不影响紧迫性——它阻塞在 xQueueReceive，收到数据就能立刻跑。
+	Key 降到 1 → 永远在 Sensor 空闲时才调度。*/
+	
     // 创建传感器采集任务（优先级 2，栈 128 字）
-    xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 3, NULL);
+    xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 3, NULL); // 最高（DHT11 不能被抢）
 	// 创建oled显示任务（优先级 1，栈 256 字）
 	xTaskCreate(vTask_Display, "Display", 256, NULL, 1, NULL);  // 优先级 1，最低
 	// 创建报警任务（优先级 3，栈 128 字）
 	xTaskCreate(vTask_Alarm, "Alarm", 128, NULL, 2, NULL); // 报警任务紧急，优先度最高
 	// 创建按键任务（优先级 2，栈 128 字）
 	xTaskCreate(vTask_Key, "Key", 128, NULL, 1, NULL);
+	// 创建状态机任务（优先级 2，栈 256 字）
+	xTaskCreate(vTask_StateMachine, "StateM", 256, NULL, 2, NULL);
 	
     // 启动调度器
     vTaskStartScheduler();

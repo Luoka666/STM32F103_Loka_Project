@@ -815,6 +815,16 @@
               <FileType>5</FileType>
               <FilePath>.\Tasks\task_key.h</FilePath>
             </File>
+            <File>
+              <FileName>task_statemachine.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Tasks\task_statemachine.c</FilePath>
+            </File>
+            <File>
+              <FileName>task_statemachine.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Tasks\task_statemachine.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

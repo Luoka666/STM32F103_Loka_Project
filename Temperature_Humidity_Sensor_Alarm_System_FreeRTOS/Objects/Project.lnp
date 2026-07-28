@@ -40,6 +40,7 @@
 ".\objects\task_display.o"
 ".\objects\task_alarm.o"
 ".\objects\task_key.o"
+".\objects\task_statemachine.o"
 ".\objects\main.o"
 ".\objects\stm32f10x_it.o"
 ".\objects\heap_4.o"

@@ -3,7 +3,6 @@
 #include "USART.h"     // 调试打印
 #include <stdio.h>
 
-extern QueueHandle_t keyQueue;   // 在 main.c 中定义
 
 // 按键任务：每 20ms 扫描一次，检测到按键后通过队列发送键值
 void vTask_Key(void* pvParameters) {
