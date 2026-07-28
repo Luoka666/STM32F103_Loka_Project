@@ -1,88 +1,37 @@
+# 智能温湿度监测与报警系统（FreeRTOS 版）
 
-#  智能温湿度监测与报警系统
-
-基于 **STM32F103C8T6** 标准库开发的嵌入式状态机实战项目。系统通过 DHT11 传感器实时采集环境数据，在 OLED 屏幕上驱动多级菜单交互，并支持阈值报警与历史记录查看。
+基于 **STM32F103C8T6** 标准库 + **FreeRTOS V10.3.1** 开发的嵌入式多任务实战项目。在裸机版双层状态机架构的基础上，将传感器采集、OLED 显示、报警处理、按键扫描拆分为独立 FreeRTOS 任务，通过队列进行任务间通信。
 
 > 本项目配套 [Python 上位机](https://github.com/Luoka666/upper_computer)，通过串口接收数据并在 PC 端绘制实时温湿度动态曲线，实现从单片机到 PC 端的完整数据闭环。
 >
 > 本项目同时维护两个版本：[裸机版（标准库状态机）](../Temperature_Humidity_Sensor_Alarm_System_BareMetal/) | **FreeRTOS 版（当前）**
-
-> **项目亮点**：从“裸机 if-else”重构为“双层 switch-case 状态机”架构，实现按键、逻辑、UI 三层解耦。主循环进一步升级为**非阻塞事件驱动**设计，本文档详细记录了从架构设计到软硬件联合调试的完整踩坑与解决过程。
 
 ---
 
 ## 目录
 
 - [功能特性](#功能特性)
-- [系统架构](#系统架构)
-- [架构演进过程](#架构演进过程)
+- [FreeRTOS 任务架构](#freertos-任务架构)
 - [文件结构](#文件结构)
 - [使用说明](#使用说明)
-- [踩坑记录与调试经验](#踩坑记录与调试经验)
+- [FreeRTOS 移植踩坑记录](#freertos-移植踩坑记录)
 - [待优化方向](#待优化方向未来计划)
-- [总结](#总结)
 
 ---
 
-##  功能特性
+## 功能特性
 
--   **实时监测**：DHT11 传感器采集温湿度，OLED 屏幕实时刷新
--   **多级菜单**：支持设置主菜单、历史记录、阈值调整等 7 种系统状态
--   **阈值报警**：温湿度超限后 LED 与蜂鸣器自动闪烁/鸣叫报警（非阻塞式）
--   **历史记录**：环形缓冲区存储最近 4 次采样数据（运行时保留，掉电不丢失为后续扩展功能，正在开发途中。）
--   **串口通信**：USART1 定时发送 ASCII 文本数据至上位机
--   **运行锁定**：RUN 状态下自动屏蔽菜单键，防止误触导致安全事故
+裸机版全部功能 + FreeRTOS 新增特性：
 
----
-
-##  系统架构
-
-### 状态机设计
-系统共定义 **7 个运行状态**，采用 **双层 switch-case** 结构进行管理：
-```c
-typedef enum {
-    STOP,                  // 待机状态
-    RUN,                   // 运行监测
-    SETTING_MENU,          // 设置主菜单
-    SETTING_HISTORY,       // 历史记录
-    SETTING_CHANGE,        // 阈值选择（温度/湿度）
-    SETTING_CHANGE_TEMP,   // 修改温度阈值
-    SETTING_CHANGE_HUMI    // 修改湿度阈值
-} SystemState;
-```
-### 核心逻辑分离
-第一层（按键 → 状态跳转）：根据当前状态和按键键值，决定是否跳转到新状态
-
-第二层（状态 → 行为执行）：根据确定的状态，执行对应的 UI 刷新、数据采集或报警动作
-
-设计原则：按键只改变状态，状态只控制行为。状态切换时调用一次 OLED_Clear() 防止屏幕闪烁，RUN 状态下主动屏蔽菜单键。
-
-### 主循环运行机制（v0.9 升级）
-```c
-while (1) {
-    uint32_t now = millis();
-
-    // 高频轮询区：每轮都执行
-    alarm_run(temperature, humidity); // 非阻塞报警检查
-
-    // 节拍任务区：每 100ms 执行一次
-    if (now - last_task_time >= 100) {
-        keyNum = Key_GetNum();   // 按键扫描（放在节拍任务区，虽然按键获取频率降低，但对于人手，已足够）
-        last_task_time = now;
-        // 第一层：状态跳转
-        // 第二层：行为执行
-    }
-}
-```
-报警检查每轮循环都运行，保证实时响应
-
-UI 刷新、传感器采集等任务按 100ms 节拍执行，避免屏幕闪烁
-
-系统心跳由 SysTick 中断维护，延时函数不再破坏 SysTick 配置
+- **多任务并发**：4 个独立 Task（Sensor、Display、Alarm、Key）通过队列通信
+- **队列解耦**：传感器数据通过 `sensorQueue` 和 `alarmQueue` 分发给消费者
+- **非阻塞延时**：`vTaskDelay()` 替代 `Delay_ms()`，CPU 不空转
+- **硬件定时器延时**：TIM2 提供微秒级精确延时，保护 DHT11 通信时序
+- **Tick Hook 兼容**：FreeRTOS Tick Hook 替代裸机 SysTick_Handler，保留 g_millis
 
 ---
 
-##  架构演进过程
+## 架构演进过程
 
 | 版本 | 说明 |
 | :--- | :--- |
@@ -95,33 +44,95 @@ UI 刷新、传感器采集等任务按 100ms 节拍执行，避免屏幕闪烁
 | v0.7 | 引入环形缓冲区，重构历史记录存储与显示逻辑 |
 | v0.8 | 集成非阻塞式 LED 报警闪烁，RUN 状态下菜单锁定 |
 | v0.9 | 主循环升级为非阻塞事件驱动架构，重构延时函数保护系统心跳 |
+| v1.0 | 移植 FreeRTOS：拆分为 Sensor / Display / Alarm / Key 四个任务，队列通信 |
 
 ---
 
-##  文件结构
-```
-/Hardware
-├── OLED.c / OLED.h     // I2C OLED 驱动（0.96寸）
-├── Key.c / Key.h       // 按键扫描（带消抖）
-├── LED.c / LED.h       // LED 状态控制
-└── buzzer.c / buzzer.h // 蜂鸣器驱动
+## FreeRTOS 任务架构
 
-/System
-├── dht11.c / dht11.h           // DHT11 单总线驱动
-├── USART.c / USART.h           // 串口发送（ASCII 格式化输出）
-├── alarm.c / alarm.h           // 报警模块（非阻塞闪烁 + SysTick 中断）
-├── UI.c / UI.h                 // 7 种状态的 UI 绘制函数
-├── Record_storage.c / Record_storage.h  // 历史记录存储（环形缓冲区）
-└── delay.c / delay.h           // 微秒/毫秒延时函数
+### 任务列表
+
+| 任务 | 优先级 | 栈大小 | 周期 | 职责 |
+|------|--------|--------|------|------|
+| **Sensor** | 3（最高） | 128 | 100ms | DHT11 采集，数据广播到 sensorQueue + alarmQueue |
+| **Alarm** | 2 | 128 | 事件驱动 | 从 alarmQueue 取数据，判断阈值，LED+蜂鸣器报警 |
+| **Display** | 1 | 256 | 事件驱动 | 从 sensorQueue 取数据，刷新 OLED 显示 |
+| **Key** | 1 | 128 | 20ms 轮询 | 调用 Key_GetNum() 扫描按键，键值通过 keyQueue 发送 |
+
+### 队列设计
+
+| 队列 | 深度 | 数据类型 | 生产者 | 消费者 |
+|------|------|----------|--------|--------|
+| `sensorQueue` | 5 | `SensorData_t` | Sensor Task | Display Task |
+| `alarmQueue` | 5 | `SensorData_t` | Sensor Task | Alarm Task |
+| `keyQueue` | 5 | `uint8_t` | Key Task | （待接入状态机） |
+
+### 数据流
+
+```
+DHT11 → Sensor Task → sensorQueue → Display Task → OLED
+                    → alarmQueue  → Alarm  Task → LED/Buzzer
+
+按键 → Key Task → keyQueue → （状态机消费，开发中）
+```
+
+### 优先级设计原则
+
+- Sensor 优先级最高，DHT11 微秒级通信期间不能被其他任务抢占
+- Alarm 优先级中等，数据到达时立即响应
+- Display 和 Key 优先级最低且同级，时间片轮转，不干扰 Sensor
+
+### 裸机架构保留部分
+
+- `Hardware/` 驱动层（OLED、LED、Key、Buzzer）沿用裸机版
+- `System/` 逻辑层（DHT11、USART、alarm、UI、Record_storage）沿用裸机版
+- `UI.c` 中的 UI 函数继续被 Display Task 调用
+- `alarm.c` 中的 `alarm_run()` 逻辑已迁移到 Alarm Task
+- 启动文件栈空间从 0x400 扩大到 0x800，向量表指向 FreeRTOS 中断处理函数
+
+---
+
+## 文件结构
+
+```
+/Hardware                  // 硬件驱动层（与裸机版共用）
+├── OLED.c / OLED.h
+├── Key.c / Key.h
+├── LED.c / LED.h
+├── buzzer.c / buzzer.h
+└── timer_delay.c / timer_delay.h   // TIM2 硬件定时器延时
+
+/System                    // 系统逻辑层（与裸机版共用）
+├── dht11.c / dht11.h
+├── USART.c / USART.h
+├── alarm.c / alarm.h
+├── UI.c / UI.h
+├── Record_storage.c / Record_storage.h
+└── delay.c / delay.h
+
+/FreeRTOS/Source           // FreeRTOS V10.3.1 内核
+├── tasks.c / queue.c / list.c / timers.c ...
+├── include/
+└── portable/RVDS/ARM_CM3/ + MemMang/
+
+/Tasks                     // FreeRTOS 任务层（新增）
+├── task_sensor.c / .h     // 传感器采集任务
+├── task_display.c / .h    // OLED 显示任务
+├── task_alarm.c / .h      // 报警任务
+└── task_key.c / .h        // 按键扫描任务
 
 /User
-└── main.c              // 主循环 + 双层状态机 + SysTick 初始化
+├── main.c                 // 硬件初始化 + 队列/任务创建 + 启动调度器
+├── FreeRTOSConfig.h       // FreeRTOS 内核配置（72MHz / 1ms tick / 10KB heap）
+└── stm32f10x_it.c         // 中断服务（SysTick 由 FreeRTOS 接管，Tick Hook 维护 g_millis）
 ```
 
 ---
 
-##  使用说明
+## 使用说明
+
 ### 硬件连接
+
 | 外设 | STM32 引脚 | 说明 |
 | :--- | :--- | :--- |
 | **DHT11** | PA0 | 单总线数据引脚 |
@@ -134,155 +145,15 @@ UI 刷新、传感器采集等任务按 100ms 节拍执行，避免屏幕闪烁
 | **报警 LED** | PA11 | 超阈值闪烁报警 |
 | **蜂鸣器** | PA12 | 超阈值鸣叫报警 |
 | **USART1** | TX: PA9, RX: PA10 | 串口发送至上位机 |
-### 系统操作指南
-| 操作 | 功能 |
-| :--- | :--- |
-| **开机 / 待机界面** | 显示系统标题与当前状态 `STOP` |
-| **按下 K1** | STOP 状态下进入 RUN 模式，开始采集与显示 |
-| **按下 K5** | STOP 状态下进入 SETTING_MENU 设置菜单 |
-| **K3 / K4** | 在菜单或设置项中上下移动光标 / 增减数值 |
-| **K2** | 确认进入子菜单 / 保存阈值 |
-| **K5** | 返回上一级菜单（在子菜单中） |
-| **RUN 模式** | 实时显示温湿度，超限时 LED 闪烁，K1 可停止运行 |
+
+### Keil 编译配置
+
+- Options for Target → C/C++ → Include Paths 需添加：`User`、`Tasks`、`FreeRTOS/Source/include`、`FreeRTOS/Source/portable/RVDS/ARM_CM3`
+- Target 需勾选 Use MicroLIB
 
 ---
 
-##  踩坑记录与调试经验
-
-### 故障现象00
-OLED 黑屏不亮，LED 常亮不闪烁。LED_Init() 被放在 while(1) 循环内部，每次循环都重新初始化 GPIO，电平不断被复位到默认值。
-
-### 故障原因00
-GPIO 初始化函数误放在主循环内，每次迭代都将引脚重新配置，导致输出电平被重置。
-
-### 解决方案00
-将 `LED_Init()`、`OLED_Init()` 等所有外设初始化函数移到 `while(1)` 之前，确保只执行一次。
-
----
-
-### 故障现象01
-按键完全失效：烧录后系统停留在 STOP 界面，按下任何按键均无反应。
-
-程序卡死：在调试模式下发现，程序会卡死在 while(GPIO_ReadInputDataBit(...) == 0); 循环中。
-
-### 故障原因01
-硬件电路未连通：面包板左右两侧电源轨（VCC/GND）是物理断开的，按键所在的一侧没有跨接电源，导致按键按下后电平无法被拉低。
-
-GPIO 时钟与端口不匹配：Key_Init() 函数中时钟使能了 RCC_APB2Periph_GPIOA，但 GPIO_Init() 却错误地写成了 GPIOB，导致 GPIOA 引脚未获得时钟，输入电平随机，被程序误判为“按键按下”。
-### 解决方案01
-跨接面包板电源轨：用两根杜邦线将面包板左右两侧的 VCC 和 GND 排针分别短接，确保整块面包板供电连通。
-
-编写硬件测试用例：在 main 函数中单独编写引脚电平翻转测试代码（让 PA0 输出方波），用外接 LED 验证引脚是否受控，从而定位到电源轨断路问题。
-
-统一端口配置：将时钟使能、GPIO_Init 和 GPIO_ReadInputDataBit 的端口参数全部修改为 GPIOA。
-
-### 故障现象02
-系统在 STOP 与 RUN 状态之间反复横跳：上电后 OLED 屏幕不断清屏重绘，串口助手显示 keyNum=1 在疯狂输出。
-
-### 故障原因02
-阻塞式按键扫描 + 悬空引脚：Key_GetNum() 函数使用了 while(等待松手) 结构，当引脚因配置错误处于悬空状态时，电平极易受干扰拉低，导致函数持续返回键值 1，状态机被反复触发。
-
-### 解决方案02
-修正 GPIO 配置为 GPIO_Mode_IPU：确保所有按键引脚都使能内部上拉，未按下时电平稳定为高。
-
-增加超时退出机制（可选）：在 while(等待松手) 循环内增加计数器，超时后强制跳出，避免死循环。
-
-后期优化方向：改为外部中断 + 非阻塞消抖，彻底消除阻塞隐患。
-
-### 故障现象03
-屏幕切换时出现字符残留：从菜单返回 STOP 界面后，屏幕下方仍残留着菜单选项的文字。
-
-历史记录界面全是重复数据：进入历史界面后，四行显示的是同一组温湿度数值。
-
-### 故障原因03
-UI 函数未全量刷新：部分 UI 函数只更新了特定行，未覆盖的行保留了上一状态的字符残影。
-
-历史记录与显示逻辑耦合：最初的 history_ui() 是在主循环中逐行写入实时数据，而没有使用专用的历史缓冲区存储历史值。
-
-### 解决方案03
-引入状态切换清屏机制：在主循环中判断 currentState != lastState 时调用一次 OLED_Clear()，确保每次状态切换都从干净画布开始。
-
-实现环形缓冲区：定义 history_temp[4] 和 history_humi[4] 数组，以及 write_index 和 history_count 两个变量。write_index 永远指向最新数据的下一个写入位置，队列满后恰好指向最旧数据。每次新数据到来时直接覆盖 write_index 指向的位置，然后指针前移一格（取模绕回），无需移动数组中已有数据，时间复杂度 O(1)。
-
-### 核心代码
-```c
-// 新版：环形缓冲区存储（RUN 状态下每次采集后调用）
-// write_index：写指针，永远指向下一次写入位置
-//   队列满后 write_index 恰好指向最旧数据，读取从此开始
-void history_add(uint8_t temp, uint8_t humi) {
-    history_temp[write_index] = temp;
-    history_humi[write_index] = humi;
-    write_index = (write_index + 1) % HISTORY_SIZE;
-    if (history_count < HISTORY_SIZE) history_count++;
-}
-```
-```c
-// 读取时从 write_index（最旧）开始顺时针遍历
-void setting_history_ui(void) {
-    // ...
-    uint8_t start = (history_count < HISTORY_SIZE) ? 0 : write_index;
-    for (i = 0; i < history_count; i++) {
-        uint8_t idx = (start + i) % HISTORY_SIZE;  // 绕回读
-        // 显示 history_temp[idx] 和 history_humi[idx]
-    }
-}
-```
-### 故障现象04
-LED 报警灯不闪烁：温湿度超限后 LED 常灭，完全不亮。
-
-按键无响应（v0.9 重构后新问题）：主循环改为非阻塞架构后，按键再次失效。
-
-### 故障原因04
-系统心跳被意外关闭：旧版 Delay_ms 函数在延时结束后会执行 SysTick->CTRL = 0x00000004，将 SysTick 定时器和中断全部关闭。导致 g_millis 停止递增（卡在固定值如 79），alarm_run 中的 500ms 计时条件永远无法满足。
-
-时序错配：Key_GetNum() 读取键值后需等待状态机消费，当它放在高频轮询区时，键值在 100ms 状态机执行前就可能被下一轮覆盖，导致状态机收不到有效按键。
-
-### 解决方案04
-延时函数重构：Delay_ms 改为纯软件循环实现（基于 Delay_us），Delay_us 改为纯软件循环。两者都不再直接操作 SysTick->CTRL 寄存器，从根源上保护系统心跳。
-
-调整按键扫描位置：将 Key_GetNum() 移入 100ms 节拍任务内部，使键值的“生产”和“消费”在同一节拍内完成，消除时序错配。
-
-补充说明：alarm_run 保留在高频轮询区，确保 LED 闪烁的实时性不受 100ms 节拍影响。
-
-### 核心代码
-```c
-// 新版 Delay_us：纯软件循环，供 DHT11 驱动专用
-void Delay_us(uint32_t xus) {
-    uint32_t count = xus * 8;  // 72MHz 下经验值
-    while (count--) {
-        __NOP();
-    }
-}
-```
-
-### 故障现象05
-RUN 模式下温湿度偶尔显示 00，或数字卡住不动不刷新，但有时又完全正常，问题间歇性出现。
-
-DHT11 读取偶尔失败时，程序未判断 `data_Check()` 的返回值，仍将无效数据写入缓冲区并更新 UI，导致显示异常。
-
-### 故障原因05
-`data_Check()` 返回 0 表示校验失败或通信超时，此时 `temperature` 和 `humidity` 的值不可靠（可能是初始值 0 或上一次的旧值）。原代码未对返回值做判断，无论读取成功与否都直接调用 `run_ui()` 和 `history_add()`，导致无效数据进入显示和存储链路。
-
-### 解决方案05
-对 `data_Check()` 返回值做 if 判断，仅在返回非零（读取成功）时才更新 UI、发送串口和存入历史记录。读取失败时直接跳过本次更新，OLED 保持上次成功显示的值不变。
-
-### 核心代码
-```c
-// 修改前：直接调用，失败也更新
-data_Check(&temperature, &humidity);
-run_ui(temperature, humidity);
-usart_send(temperature, humidity);
-history_add(temperature, humidity);
-
-// 修改后：判断返回值，成功才更新
-if (data_Check(&temperature, &humidity)) {
-    run_ui(temperature, humidity);
-    usart_send(temperature, humidity);
-    history_add(temperature, humidity);
-}
-```
-
-##  FreeRTOS 移植踩坑记录
+## FreeRTOS 移植踩坑记录
 
 ### 故障现象06
 编译报错 `identifier "sensorQueue" is undefined` 等符号未定义。
@@ -302,9 +173,12 @@ Options for Target → C/C++ → Include Paths 添加 `Tasks` 文件夹路径。
 DHT11 通信时序为微秒级。FreeRTOS 的 SysTick 中断（每 1ms 一次）和任务调度会打断 DHT11 电平信号，导致通信失败。
 
 ### 解决方案07
+
+多轮迭代：
+
 - `taskENTER_CRITICAL()`：成功率从 0% 提升到约 20%，但仍有中断干扰
-- `__disable_irq()`：彻底关闭所有中断，成功率 100%，但会暂停 SysTick 心跳
-- `vTaskSuspendAll()` + `xTaskResumeAll()`：**最终方案**，只挂起任务调度不关中断，兼顾成功率与系统实时性
+- `__disable_irq()`：彻底关闭所有中断，成功率 100%，但暂停 SysTick 心跳
+- 最终方案：引入 **TIM2 硬件定时器延时**（`Delay_us_TIM` / `Delay_ms_TIM`），延时精度不依赖软件 NOP 循环，同时配合**任务优先级保护**（Sensor 优先级设为最高 3），其他任务无法抢占 Sensor 的 CPU 时间
 
 ---
 
@@ -326,23 +200,33 @@ DHT11 通信时序为微秒级。FreeRTOS 的 SysTick 中断（每 1ms 一次）
 `stm32f10x_it.c` 和 FreeRTOS 的 `port.c` 同时定义了 `SysTick_Handler`，链接器发现重名符号。
 
 ### 解决方案09
-- 启动文件向量表将 `SysTick_Handler` 改为 `xPortSysTickHandler`，指向 FreeRTOS 实现
-- `stm32f10x_it.c` 中删除 `SysTick_Handler`，改为 `vApplicationTickHook()` 通过 FreeRTOS Tick Hook 递增 `g_millis`
+- 启动文件向量表将 `SysTick_Handler` 改为 `xPortSysTickHandler`，指向 FreeRTOS 的 port.c 实现
+- `stm32f10x_it.c` 中删除 `SysTick_Handler`，改为 `vApplicationTickHook()` 通过 FreeRTOS Tick Hook 递增 `g_millis`，保持与裸机版驱动代码的兼容
 
 ---
 
-##  待优化方向（未来计划）
-按键扫描改为非阻塞式（消除 while(等待松手) 阻塞风险）
+### 故障现象10
+按一次按键 K1 后，串口短暂打印 `Key=1`，随后系统完全停止响应——串口不再打印温湿度数据，也不打印 `DHT11 fail`，整个系统陷入沉默。
 
-阈值数据写入内部 Flash，实现掉电保存
+### 故障原因10
+Key 任务优先级（原为 2）与 Sensor 任务同级。按 K1 后 `Key_GetNum()` 内的 `while(等待松手)` 阻塞 Key 任务，同优先级的 Sensor 任务被时间片切换至 CPU 时，DHT11 的 GPIO 轮询循环（`while(GPIO_ReadInputDataBit(...) == 1)`）被 Key 任务抢占，错失电平变化窗口，导致 DHT11 死锁在等待信号变化的循环中。Sensor 任务卡死后不再生产数据，Display 和 Alarm 永久阻塞在 `xQueueReceive()`。
 
-移植 FreeRTOS 剩余模块：将报警处理、历史记录存储、按键扫描拆分为独立任务
-
-开发 Python 上位机，通过串口实现数据可视化与远程控制（已完成，见[配套上位机](https://github.com/Luoka666/upper_computer)）
-
-利用 RTC 唤醒 + STOP 低功耗模式，延长电池供电场景的续航时间
+### 解决方案10
+调整任务优先级：Sensor 升为 3（最高），Alarm 降为 2，Key 降为 1。Sensor 运行时任何任务都无法抢占，DHT11 通信时序得到保护。
 
 ---
 
-##  总结
-本项目从底层驱动验证开始，逐步重构为规范的双层状态机架构，并最终升级为非阻塞事件驱动的主循环设计。通过完整的踩坑与调试闭环，深入掌握了 GPIO 配置、外设时钟、I2C/单总线通信、显示优化、非阻塞延时、环形缓冲区、模块解耦等嵌入式核心技能。项目代码结构清晰，已完整开源，可直接作为嵌入式软件实习求职的项目经验展示。
+## 待优化方向（未来计划）
+
+- 按键状态机接入：keyQueue 消费者实现，将键值送入裸机版的状态机逻辑
+- 按键扫描非阻塞化：将 `Key_GetNum()` 中的 while(等待松手) 改为外部中断 + 消抖定时器
+- 阈值数据写入内部 Flash，实现掉电保存
+- 利用 FreeRTOS 软件定时器替代 Alarm Task 中的 vTaskDelay 周期
+- 利用 RTC 唤醒 + STOP 低功耗模式
+
+---
+
+## 相关链接
+
+- [裸机版（标准库状态机）](../Temperature_Humidity_Sensor_Alarm_System_BareMetal/)
+- [Python 串口上位机](https://github.com/Luoka666/upper_computer)

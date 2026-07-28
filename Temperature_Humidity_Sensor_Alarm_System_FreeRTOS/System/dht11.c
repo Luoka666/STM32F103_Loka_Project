@@ -84,7 +84,9 @@ uint8_t DHT11_Send() {
         while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1);
         // 等待拉高
         while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 0);
-       Delay_us_TIM(40);
+	
+		Delay_us_TIM(40);
+		
         if (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1) {
 
             bit = 1;
@@ -101,6 +103,7 @@ uint8_t DHT11_Send() {
     }
 
     return byte;
+	
 }
 // 数据接收检验与整合(0失败，1成功)
 uint8_t data_Check(uint8_t *temp, uint8_t *humi) {

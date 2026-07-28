@@ -23,6 +23,7 @@ void vTask_Key(void* pvParameters) {
 
             // 发送到按键队列
             xQueueSend(keyQueue, &keyNum, portMAX_DELAY);
+			
         }
 
         // 每 20ms 扫描一次

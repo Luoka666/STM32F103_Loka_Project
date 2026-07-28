@@ -20,7 +20,9 @@ void vTask_Sensor(void* pvParameters) {
 			usart_send(data.temperature, data.humidity);//验证是否采集成功
 
             // 把数据塞进队列，发给显示任务和报警任务，每个任务消费者必须单独设置各自的队列，否则就会抢数据
+//			USART_SendString("Before xQueue\r\n");  // ← 加这行
             xQueueSend(sensorQueue, &data, portMAX_DELAY);// portMAX_DELAY 一直等，直到塞成功为止
+//			USART_SendString("After xQueue\r\n");   // ← 加这行
         	xQueueSend(alarmQueue,   &data, portMAX_DELAY);   // 发给报警任务
 
         }else{

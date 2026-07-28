@@ -2,7 +2,7 @@
 #include "task_sensor.h"   // 使用 SensorData_t 和 alarmQueue 声明
 #include "LED.h"
 #include "Buzzer.h"
-
+#include "USART.h"
 extern uint8_t temp_threshold;
 extern uint8_t humi_threshold;
 

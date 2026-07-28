@@ -53,13 +53,13 @@ int main(void) {
 	keyQueue = xQueueCreate(5, sizeof(uint8_t));
 
     // 创建传感器采集任务（优先级 2，栈 128 字）
-    xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 2, NULL);
+    xTaskCreate(vTask_Sensor, "Sensor", 128, NULL, 3, NULL);
 	// 创建oled显示任务（优先级 1，栈 256 字）
 	xTaskCreate(vTask_Display, "Display", 256, NULL, 1, NULL);  // 优先级 1，最低
 	// 创建报警任务（优先级 3，栈 128 字）
-	xTaskCreate(vTask_Alarm, "Alarm", 128, NULL, 3, NULL); // 报警任务紧急，优先度最高
+	xTaskCreate(vTask_Alarm, "Alarm", 128, NULL, 2, NULL); // 报警任务紧急，优先度最高
 	// 创建按键任务（优先级 2，栈 128 字）
-	xTaskCreate(vTask_Key, "Key", 128, NULL, 2, NULL);
+	xTaskCreate(vTask_Key, "Key", 128, NULL, 1, NULL);
 	
     // 启动调度器
     vTaskStartScheduler();
