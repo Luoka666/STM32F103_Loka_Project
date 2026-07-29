@@ -31,22 +31,7 @@
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
       <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.lnp" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.lnp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/task_display.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_display.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/task_key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_key.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.uvprojx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvprojx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_display.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_display.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_key.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_key.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_key.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_key.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +51,7 @@
     <option name="debugProfileId" value="ffc9293e-e6bc-4875-a6c0-e65a05a257ba" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="315" />
+    <option name="cachedIndexableFilesCount" value="324" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
@@ -207,11 +192,6 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -235,6 +215,7 @@
       <workItem from="1785141363449" duration="41000" />
       <workItem from="1785141443695" duration="310000" />
       <workItem from="1785225071944" duration="1184000" />
+      <workItem from="1785327576754" duration="50000" />
     </task>
     <servers />
   </component>
