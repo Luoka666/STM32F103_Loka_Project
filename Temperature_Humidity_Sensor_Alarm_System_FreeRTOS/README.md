@@ -6,6 +6,8 @@
 >
 > 本项目同时维护两个版本：[裸机版（标准库状态机）](../Temperature_Humidity_Sensor_Alarm_System_BareMetal/) | **FreeRTOS 版（当前）**
 
+![硬件实物](assets/images/13d8b72b12c22ff2e7140d848e50ae0f.jpg)
+
 ---
 
 ## 目录
@@ -14,7 +16,7 @@
 - [FreeRTOS 任务架构](#freertos-任务架构)
 - [文件结构](#文件结构)
 - [使用说明](#使用说明)
-- [FreeRTOS 移植踩坑记录](#freertos-移植踩坑记录)
+- [FreeRTOS 移植与重构踩坑记录](#freertos-移植与重构踩坑记录)
 - [待优化方向](#待优化方向未来计划)
 
 ---
@@ -153,66 +155,95 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED
 
 ---
 
-## FreeRTOS 移植踩坑记录
+## FreeRTOS 移植与重构踩坑记录
 
-### 故障现象06
-编译报错 `identifier "sensorQueue" is undefined` 等符号未定义。
+### 故障现象01
+编译报错 `identifier "sensorQueue" is undefined`、`identifier "SensorData_t" is undefined` 等符号未定义。
 
-### 故障原因06
-新建的 `Tasks/` 文件夹路径未添加到 Keil 的 C/C++ 包含路径中，编译器找不到 `task_sensor.h`。
+### 故障原因01
+新建的 `Tasks/` 文件夹路径未添加到 Keil 的 C/C++ 包含路径中，编译器找不到 `task_sensor.h` 等头文件。
 
-### 解决方案06
+### 解决方案01
 Options for Target → C/C++ → Include Paths 添加 `Tasks` 文件夹路径。
 
 ---
 
+### 故障现象02
+编译通过，链接时报 `L6200E: Symbol SysTick_Handler multiply defined`，由 `stm32f10x_it.o` 和 `port.o` 重复定义。
+
+### 故障原因02
+裸机工程中 `stm32f10x_it.c` 定义了 `SysTick_Handler`，而 FreeRTOS 的 `port.c` 也需要接管 SysTick。两个文件中存在同名函数，链接器不知道该用哪一个。
+
+### 解决方案02
+在 `FreeRTOSConfig.h` 中配置 `#define xPortSysTickHandler SysTick_Handler`，让 FreeRTOS 的 SysTick 处理函数替换原来的。删除 `stm32f10x_it.c` 中的 `SysTick_Handler` 定义，只保留 FreeRTOS 版本。
+
+---
+
+### 故障现象03
+串口持续打印 `DHT11 fail`，传感器完全无法工作。烧录裸机程序到同一块板子上，DHT11 正常工作，排除硬件故障。
+
+### 故障原因03
+DHT11 的通信时序是微秒级的，FreeRTOS 的 SysTick 中断（每 1ms 一次）和任务调度会打断通信过程中的精确延时。裸机下使用的软件循环 `Delay_us` 基于 CPU 空转，精度受编译器优化等级影响，在 FreeRTOS 工程中与裸机工程可能存在差异。
+
+最初尝试的三种保护方案——`vTaskSuspendAll()` 挂起调度器、`taskENTER_CRITICAL()` 进入临界区、`__disable_irq()` 关闭全局中断——均无效。后经排查，杜邦线接触不良是导致早期测试结果不稳定的隐藏因素。
+
+### 解决方案03
+
+- 更换所有杜邦线，确保物理连接可靠
+- 使用硬件定时器 TIM2 实现精确微秒延时（配置为 1MHz 计数频率，每个计数 = 1μs），替代软件循环 `Delay_us`，同时提供 `Delay_ms_TIM` 用于毫秒级延时。硬件定时器的精度完全由硬件保证，不受任务调度、中断、编译器优化等任何软件因素影响，也不再需要关闭中断来保护时序
+
+---
+
+### 故障现象04
+传感器任务发送约 6 次数据后停止，串口不再有任何输出。系统完全沉默，必须手动复位才能恢复。
+
+### 故障原因04
+队列深度为 5，使用 `portMAX_DELAY` 作为发送超时参数。传感器每 100ms 采集一次，往队列里塞一条数据。显示任务和报警任务尚未创建，队列没有消费者，数据只进不出。塞满 5 条后，第 6 次发送时任务永久进入阻塞态，等待永远不会到来的空位。
+
+### 解决方案04
+
+- 立即修复：创建显示任务和报警任务作为消费者，从队列取数据，让队列有进有出
+- 防御性优化：报警任务在未超阈值时不再执行 `vTaskDelay(200)`，只关灯后立刻回到队列阻塞，确保消费速度跟上生产速度，避免队列积压反压传感器任务
+
+---
+
+### 故障现象05
+按一次按键 K1 后，串口短暂打印 `Key=1`，随后整个系统完全停止——串口不再打印温湿度数据，也不打印 `DHT11 fail`。如果不按任何按键，系统正常运行。
+
+### 故障原因05
+
+**直接原因**：传感器任务在 `xQueueSend` 上永久阻塞，队列满且无人消费。
+
+**根本原因**：按键任务使用裸机版阻塞式 `Key_GetNum()`，内部有 `while(GPIO_ReadInputDataBit(...) == 0);` 等待松手的死循环。按键按下后，这个循环会空转约 150ms（人的按键时长）。在这期间，按键任务不调用任何 FreeRTOS 阻塞 API（`vTaskDelay`、`xQueueReceive` 等），内核不知道它在"等待"，只以为它在"执行"。按键任务和传感器任务当时是同优先级（均为 2），内核不会把 CPU 从"正在工作"的按键任务切走，传感器任务被"饿死"——处于就绪态，但得不到 CPU 时间。传感器任务被暂停期间，显示任务和报警任务也得不到执行，队列中的数据无人消费。按键松手后，传感器任务恢复，但队列可能已满，`xQueueSend` 上的 `portMAX_DELAY` 让任务永久阻塞。整个系统进入死锁状态。
+
+**为什么裸机没有这个问题**：裸机下只有一个主循环，死等松手不影响任何其他逻辑。FreeRTOS 下多个任务共享 CPU，一个任务死等等于剥夺其他任务的 CPU 时间。
+
+### 解决方案05
+
+- 调整任务优先级：传感器任务升至最高（3），按键任务降至最低（1）。利用 FreeRTOS 的抢占式调度机制，即使按键任务在 while 空转，内核在每次 SysTick 中断时检查到高优先级的传感器任务就绪，会立刻抢占 CPU，传感器任务不再被饿死
+- 后续优化方向：用 FreeRTOS 软件定时器实现非阻塞按键消抖，彻底消除 while 空转，从根源上解决问题
+
+---
+
+### 故障现象06
+系统运行过程中 OLED 随机黑屏，但串口继续正常打印温湿度数据，传感器采集和报警功能均正常。按 K1 切换到 RUN 状态后，屏幕有时能恢复显示。
+
+### 故障原因06
+软件模拟 I2C 在多任务环境下被抢占。两个任务（显示任务和状态机任务）可能同时尝试操作 OLED，虽然外层有互斥锁保护，但在 `OLED_WriteCommand` 和 `OLED_WriteData` 内部，I2C 的 SDA 数据线在通信过程中可能被另一个任务的 I2C 操作打断，导致 SDA 被拉低后无法释放，I2C 总线进入死锁状态。OLED 收不到完整的命令序列，内部状态机混乱，屏幕黑屏。
+
+### 解决方案06
+在 `OLED_WriteCommand` 和 `OLED_WriteData` 函数的前后，添加 `taskENTER_CRITICAL()` / `taskEXIT_CRITICAL()` 保护。确保每次 I2C 通信的完整字节传输期间，不被任何中断或任务切换打断。临界区保护的是最底层的硬件操作，而互斥锁保护的是 OLED 模块级别的访问互斥，两者配合形成完整的保护方案。
+
+---
+
 ### 故障现象07
-串口持续打印 `DHT11 fail`，传感器在 FreeRTOS 下完全无法通信。
+系统上电后 OLED 黑屏。按 K1 进入 RUN 状态后，屏幕正常显示温湿度数据。切回 STOP 状态后，屏幕再次黑屏。
 
 ### 故障原因07
-DHT11 通信时序为微秒级。FreeRTOS 的 SysTick 中断（每 1ms 一次）和任务调度会打断 DHT11 电平信号，导致通信失败。
+FreeRTOS 是多任务事件驱动架构。状态机任务默认 `currentState = STOP`，但它只在收到按键事件时才执行 UI 绘制。开机后没有任何按键事件触发，状态机任务一直阻塞在 `xQueueReceive(keyQueue, ...)` 上，永远不会主动去画 STOP 界面。裸机下主循环每轮都会检查状态并执行对应的 UI 函数，RTOS 下没有这个"每轮都检查"的机制。
 
 ### 解决方案07
-
-多轮迭代：
-
-- `taskENTER_CRITICAL()`：成功率从 0% 提升到约 20%，但仍有中断干扰
-- `__disable_irq()`：彻底关闭所有中断，成功率 100%，但暂停 SysTick 心跳
-- 最终方案：引入 **TIM2 硬件定时器延时**（`Delay_us_TIM` / `Delay_ms_TIM`），延时精度不依赖软件 NOP 循环，同时配合**任务优先级保护**（Sensor 优先级设为最高 3），其他任务无法抢占 Sensor 的 CPU 时间
-
----
-
-### 故障现象08
-传感器任务发送约 6 次数据（队列深度 5）后停止，串口不再有输出。
-
-### 故障原因08
-队列深度为 5，使用 `portMAX_DELAY` 等待发送。队列满后无消费者任务取走数据，传感器任务被永久阻塞在 `xQueueSend()`。
-
-### 解决方案08
-创建显示任务（`vTask_Display`）作为消费者，持续从队列取数据并刷新 OLED，释放队列空间。
-
----
-
-### 故障现象09
-编译报错 `L6200E: Symbol SysTick_Handler multiply defined`。
-
-### 故障原因09
-`stm32f10x_it.c` 和 FreeRTOS 的 `port.c` 同时定义了 `SysTick_Handler`，链接器发现重名符号。
-
-### 解决方案09
-- 启动文件向量表将 `SysTick_Handler` 改为 `xPortSysTickHandler`，指向 FreeRTOS 的 port.c 实现
-- `stm32f10x_it.c` 中删除 `SysTick_Handler`，改为 `vApplicationTickHook()` 通过 FreeRTOS Tick Hook 递增 `g_millis`，保持与裸机版驱动代码的兼容
-
----
-
-### 故障现象10
-按一次按键 K1 后，串口短暂打印 `Key=1`，随后系统完全停止响应——串口不再打印温湿度数据，也不打印 `DHT11 fail`，整个系统陷入沉默。
-
-### 故障原因10
-Key 任务优先级（原为 2）与 Sensor 任务同级。按 K1 后 `Key_GetNum()` 内的 `while(等待松手)` 阻塞 Key 任务，同优先级的 Sensor 任务被时间片切换至 CPU 时，DHT11 的 GPIO 轮询循环（`while(GPIO_ReadInputDataBit(...) == 1)`）被 Key 任务抢占，错失电平变化窗口，导致 DHT11 死锁在等待信号变化的循环中。Sensor 任务卡死后不再生产数据，Display 和 Alarm 永久阻塞在 `xQueueReceive()`。
-
-### 解决方案10
-调整任务优先级：Sensor 升为 3（最高），Alarm 降为 2，Key 降为 1。Sensor 运行时任何任务都无法抢占，DHT11 通信时序得到保护。
+在 `main()` 函数中，创建所有任务之前、启动调度器之前，手动调用一次 `stop_ui()` 绘制开机默认界面。此时调度器尚未启动，不存在多任务竞争，可以安全地直接操作 OLED。后续状态切换时的 UI 重绘由状态机任务负责，显示任务负责 RUN 状态下的 `run_ui` 实时刷新。
 
 ---
 

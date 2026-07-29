@@ -49,7 +49,7 @@ int main(void) {
     Key_Init(); // 按键初始化（之前修好的那个）
 	TIM2_Delay_Init();  // 初始化硬件定时器延时
     init_alarm(); 
-	Buzzer_off();
+	Buzzer_off(); // 初始化为低电平，防止系统开始时就鸣叫
     OLED_Clear();
 	
 	stop_ui();// 开机后主动画一次 STOP 界面，否则oled会显示黑屏
