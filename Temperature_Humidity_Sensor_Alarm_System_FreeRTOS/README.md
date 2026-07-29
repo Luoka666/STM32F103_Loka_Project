@@ -25,8 +25,9 @@
 
 裸机版全部功能 + FreeRTOS 新增特性：
 
-- **多任务并发**：4 个独立 Task（Sensor、Display、Alarm、Key）通过队列通信
-- **队列解耦**：传感器数据通过 `sensorQueue` 和 `alarmQueue` 分发给消费者
+- **多任务并发**：6 个独立 Task（Sensor / StateMachine / Alarm / Display / Record / Key）通过队列通信
+- **队列解耦**：传感器数据通过 3 条队列分发给不同消费者，各 Task 独立消费互不抢夺
+- **互斥锁 + 临界区**：OLED 访问双重保护，模块级互斥 + I2C 底层防抢占
 - **非阻塞延时**：`vTaskDelay()` 替代 `Delay_ms()`，CPU 不空转
 - **硬件定时器延时**：TIM2 提供微秒级精确延时，保护 DHT11 通信时序
 - **Tick Hook 兼容**：FreeRTOS Tick Hook 替代裸机 SysTick_Handler，保留 g_millis
@@ -56,9 +57,11 @@
 
 | 任务 | 优先级 | 栈大小 | 周期 | 职责 |
 |------|--------|--------|------|------|
-| **Sensor** | 3（最高） | 128 | 100ms | DHT11 采集，数据广播到 sensorQueue + alarmQueue |
-| **Alarm** | 2 | 128 | 事件驱动 | 从 alarmQueue 取数据，判断阈值，LED+蜂鸣器报警 |
-| **Display** | 1 | 256 | 事件驱动 | 从 sensorQueue 取数据，刷新 OLED 显示 |
+| **Sensor** | 3（最高） | 128 | 100ms | RUN 状态下采集 DHT11，广播到 sensorQueue / alarmQueue / recordQueue |
+| **StateMachine** | 2 | 256 | 事件驱动 | 从 keyQueue 取键值，管理 7 种系统状态跳转 + UI 绘制 |
+| **Alarm** | 2 | 128 | 事件驱动 | 从 alarmQueue 取数据，判断阈值，LED+蜂鸣器 500ms 周期报警 |
+| **Display** | 1 | 256 | 事件驱动 | 从 sensorQueue 取数据，RUN 状态下刷新 OLED 温湿度显示 |
+| **Record** | 1 | 128 | 事件驱动 | 从 recordQueue 取数据，写入环形缓冲区（复用裸机版 history_add） |
 | **Key** | 1 | 128 | 20ms 轮询 | 调用 Key_GetNum() 扫描按键，键值通过 keyQueue 发送 |
 
 ### 队列设计
@@ -67,15 +70,25 @@
 |------|------|----------|--------|--------|
 | `sensorQueue` | 5 | `SensorData_t` | Sensor Task | Display Task |
 | `alarmQueue` | 5 | `SensorData_t` | Sensor Task | Alarm Task |
-| `keyQueue` | 5 | `uint8_t` | Key Task | （待接入状态机） |
+| `recordQueue` | 5 | `SensorData_t` | Sensor Task（timeout=0 非阻塞发送） | Record Task |
+| `keyQueue` | 5 | `uint8_t` | Key Task | StateMachine Task |
+
+### 互斥锁
+
+| 锁 | 保护对象 | 使用者 |
+|----|----------|--------|
+| `oledMutex` | OLED 模块级别访问互斥 | Display Task、StateMachine Task |
+
+OLED 底层 I2C 通信额外由 `taskENTER_CRITICAL()` 保护，互斥锁 + 临界区双重保护。
 
 ### 数据流
 
 ```
-DHT11 → Sensor Task → sensorQueue → Display Task → OLED
+DHT11 → Sensor Task → sensorQueue → Display Task → OLED（RUN 状态下）
                     → alarmQueue  → Alarm  Task → LED/Buzzer
+                    → recordQueue → Record Task → 环形缓冲区
 
-按键 → Key Task → keyQueue → （状态机消费，开发中）
+按键 → Key Task → keyQueue → StateMachine Task → 状态跳转 + UI 绘制
 ```
 
 ### 优先级设计原则
@@ -118,10 +131,12 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED
 └── portable/RVDS/ARM_CM3/ + MemMang/
 
 /Tasks                     // FreeRTOS 任务层（新增）
-├── task_sensor.c / .h     // 传感器采集任务
-├── task_display.c / .h    // OLED 显示任务
-├── task_alarm.c / .h      // 报警任务
-└── task_key.c / .h        // 按键扫描任务
+├── task_sensor.c / .h       // 传感器采集任务
+├── task_statemachine.c / .h // 状态机任务（7 状态跳转 + UI 绘制）
+├── task_display.c / .h      // OLED 显示任务
+├── task_alarm.c / .h        // 报警任务
+├── task_record.c / .h       // 历史记录存储任务
+└── task_key.c / .h          // 按键扫描任务
 
 /User
 ├── main.c                 // 硬件初始化 + 队列/任务创建 + 启动调度器
