@@ -90,7 +90,7 @@ void vTask_StateMachine(void* pvParameters) {
                     setting_menu_ui();
                     break;
                 case SETTING_HISTORY:
-                    setting_history_ui();
+                    setting_history_ui(); // 历史记录绘画
                     break;
                 case SETTING_CHANGE:
                     setting_change_ui();

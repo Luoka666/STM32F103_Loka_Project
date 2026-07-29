@@ -2,7 +2,7 @@
 // Created by 32663 on 2026/4/23.
 //
 #include <stdint.h>
-
+#include <stdio.h>
 #ifndef TEMPLE_PROJECT_USART_H
 #define TEMPLE_PROJECT_USART_H
 

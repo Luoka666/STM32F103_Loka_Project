@@ -32,7 +32,7 @@ void history_add(uint8_t temp, uint8_t humi) {
     write_index = (write_index + 1) % HISTORY_SIZE;
 
     if (history_count < HISTORY_SIZE) {
-        history_count++;
+        history_count++; // 大于HISTORY_SIZE，恒为4
     }
 	
 }

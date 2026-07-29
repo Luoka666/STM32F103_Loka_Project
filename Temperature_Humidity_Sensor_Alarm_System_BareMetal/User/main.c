@@ -16,7 +16,7 @@ uint8_t keyNum = 0;
 uint8_t menu_index = 0;
 uint8_t threshold_menu_index = 0;
 //初始报警阈值
-uint8_t temp_threshold = 40, humi_threshold = 80; // 报警阈值
+uint8_t temp_threshold = 40, humi_threshold = 60; // 报警阈值
 
 
 

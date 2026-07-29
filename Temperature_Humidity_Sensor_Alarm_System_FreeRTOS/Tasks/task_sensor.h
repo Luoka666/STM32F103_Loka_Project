@@ -13,6 +13,8 @@ typedef struct {
 // 队列句柄（在 main.c 中定义，这里在外部声明）
 extern QueueHandle_t sensorQueue; // 传感器队列句柄
 extern QueueHandle_t alarmQueue;   // 报警队列句柄
+extern QueueHandle_t recordQueue;  // 历史记录队列句柄
+
 // 传感器任务函数
 void vTask_Sensor(void* pvParameters);
 
