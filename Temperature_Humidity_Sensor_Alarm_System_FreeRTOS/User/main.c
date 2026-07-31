@@ -1,3 +1,4 @@
+#include "FreeRTOS.h" // 放在所有头文件之前
 #include "stm32f10x.h"
 #include "dht11.h"
 #include "oled.h"
@@ -12,7 +13,6 @@
 #include "timer_delay.h"
 #include "buzzer.h"
 // FreeRTOS头文件
-#include "FreeRTOS.h"      // FreeRTOS 基础头文件
 #include "task.h"           // 任务相关所需 API（xTaskCreate、vTaskStartScheduler）
 #include "queue.h"          // 队列相关所需 API（xQueueCreate、xQueueSend）
 #include "stm32f10x_rcc.h"
@@ -22,6 +22,8 @@
 #include "task_key.h"
 #include "task_statemachine.h"
 #include "task_record.h"
+#include "timers.h"  // 软件定时器头文件，使用软件定时器对按键进行非阻塞消抖，之前的while()循环会干扰FreeRTOS运行。
+
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
@@ -33,7 +35,7 @@ uint8_t threshold_menu_index = 0;
 uint8_t temp_threshold = 40, humi_threshold = 60; // 报警阈值
 
 SemaphoreHandle_t oledMutex;
-QueueHandle_t keyQueue;
+TimerHandle_t keyTimer;  // 按键扫描定时器句柄
 QueueHandle_t sensorQueue; // 创建 struct QueueDefinition * 类型的指针变量，定义一个结构体指针变量 sensorQueue
 QueueHandle_t alarmQueue;
 QueueHandle_t keyQueue;
@@ -81,6 +83,18 @@ int main(void) {
 	xTaskCreate(vTask_StateMachine, "StateM", 256, NULL, 2, NULL);
 	// 创建历史存储任务（优先级 1，最低，栈 128 字）
 	xTaskCreate(vTask_Record, "Record", 128, NULL, 1, NULL);
+	
+	// 创建按键扫描软件定时器（周期 10ms，自动重装载）
+	keyTimer = xTimerCreate(
+		"KeyTimer",                    // 定时器名称
+		pdMS_TO_TICKS(10),             // 周期 10ms
+		pdTRUE,                        // 自动重装载（循环执行）
+		NULL,                          // 定时器 ID（不用的话就填 NULL）
+		vKeyTimerCallback              // 回调函数
+	);
+	// 启动定时器
+	xTimerStart(keyTimer, 0);
+
 	
     // 启动调度器
     vTaskStartScheduler();

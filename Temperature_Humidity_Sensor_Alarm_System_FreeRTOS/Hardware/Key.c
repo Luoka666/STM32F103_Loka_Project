@@ -1,6 +1,11 @@
 #include "stm32f10x.h"                  // Device header
 #include "Delay.h"
 #include "USART.h"
+// FreeRTOS软件定时器消抖所需库
+#include "FreeRTOS.h"
+#include "timers.h"
+#include "queue.h"
+
 /**
   * 函    数：按键初始化
   * 参    数：无
@@ -12,7 +17,7 @@ void Key_Init(void)
 
     GPIO_InitTypeDef GPIO_InitStructure;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5; // 或运算，可同时配置
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);  // 改成 GPIOA 
 }
@@ -69,4 +74,41 @@ uint8_t Key_GetNum(void)
 
 	
 	return KeyNum;			//返回键码值，如果没有按键按下，所有if都不成立，则键码为默认值0
+}
+
+
+//==================== 软件定时器消抖 ====================//
+
+extern QueueHandle_t keyQueue;
+// 按键状态机变量
+static uint8_t key_debounce[5] = {0, 0, 0, 0, 0};  // 消抖计数器
+static uint8_t key_confirmed[5] = {0, 0, 0, 0, 0};  // 已确认标记
+
+// 软件定时器回调函数（每 10ms 执行一次）
+void vKeyTimerCallback(TimerHandle_t xTimer) {
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    uint8_t keyNum = 0;
+
+    // 依次检查 K1~K5（PA1~PA5）
+    uint16_t pins[5] = {GPIO_Pin_1, GPIO_Pin_2, GPIO_Pin_3, GPIO_Pin_4, GPIO_Pin_5};
+
+    for (int i = 0; i < 5; i++) {
+        if (GPIO_ReadInputDataBit(GPIOA, pins[i]) == 0) {  // 按键按下（低电平）
+            if (key_debounce[i] < 2) {
+                key_debounce[i]++;  // 消抖计数加 1
+            }
+            if (key_debounce[i] >= 2 && key_confirmed[i] == 0) {
+                // 连续 2 次检测到按下（20ms 消抖完成），确认按键
+                key_confirmed[i] = 1;
+                keyNum = i + 1;  // 键值 1~5
+                xQueueSendFromISR(keyQueue, &keyNum, &xHigherPriorityTaskWoken);
+            }
+        } else {  // 按键松开
+            key_debounce[i] = 0;    // 消抖计数清零
+            key_confirmed[i] = 0;   // 确认标记清零
+        }
+    }
+
+    // 如果有更高优先级的任务被唤醒，触发上下文切换
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }

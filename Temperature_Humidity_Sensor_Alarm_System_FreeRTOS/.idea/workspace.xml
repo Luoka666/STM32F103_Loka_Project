@@ -29,9 +29,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/Key.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/Key.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/Key.h" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/Key.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project_FreeRTOS_Rebuild.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/key.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_key.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/task_sensor.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/task_sensor.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/ui.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/ui.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/System/UI.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/UI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_sensor.c" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_sensor.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +63,7 @@
     <option name="debugProfileId" value="ffc9293e-e6bc-4875-a6c0-e65a05a257ba" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="324" />
+    <option name="cachedIndexableFilesCount" value="328" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="Git.Settings">
@@ -216,6 +228,9 @@
       <workItem from="1785141443695" duration="310000" />
       <workItem from="1785225071944" duration="1184000" />
       <workItem from="1785327576754" duration="50000" />
+      <workItem from="1785399463442" duration="3117000" />
+      <workItem from="1785490533633" duration="185000" />
+      <workItem from="1785490775730" duration="27000" />
     </task>
     <servers />
   </component>
