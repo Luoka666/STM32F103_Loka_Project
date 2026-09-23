@@ -18,13 +18,137 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../3-1-2LED flowing light/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../3-1-2LED flowing light/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/editor.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/Key.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/Key.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/Key.h" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/Key.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/stm32f10x_flash.c" beforeDir="false" afterPath="$PROJECT_DIR$/Library/stm32f10x_flash.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/stm32f10x_i2c.c" beforeDir="false" afterPath="$PROJECT_DIR$/Library/stm32f10x_i2c.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/stm32f10x_usart.c" beforeDir="false" afterPath="$PROJECT_DIR$/Library/stm32f10x_usart.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project_Target 1.dep" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project_Target 1.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/alarm.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/buzzer.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/buzzer.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/delay.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/delay.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/dht11.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/dht11.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/key.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/led.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/led.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/main.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/misc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/misc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/oled.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/oled.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/record_storage.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/record_storage.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_adc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_adc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_bkp.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_bkp.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_can.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_can.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_cec.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_cec.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_crc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_crc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_dac.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_dac.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_dbgmcu.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_dbgmcu.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_dma.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_dma.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_exti.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_exti.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_flash.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_flash.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_fsmc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_fsmc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_gpio.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_gpio.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_i2c.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_i2c.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_it.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_it.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_iwdg.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_iwdg.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_pwr.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_pwr.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_rcc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_rcc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_rtc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_rtc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_sdio.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_sdio.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_spi.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_spi.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_tim.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_tim.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_usart.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_usart.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/stm32f10x_wwdg.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/stm32f10x_wwdg.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/system_stm32f10x.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/system_stm32f10x.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/ui.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/ui.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/usart.crf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/usart.crf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/System/Record_storage.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/Record_storage.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/System/Record_storage.h" beforeDir="false" afterPath="$PROJECT_DIR$/System/Record_storage.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/System/UI.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/UI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Start/stm32f10x.h" beforeDir="false" afterPath="$PROJECT_DIR$/Start/stm32f10x.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/System/dht11.c" beforeDir="false" afterPath="$PROJECT_DIR$/System/dht11.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/User/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.reasonix/desktop-topic-auto-title-meta.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.reasonix/desktop-topic-created-at.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.reasonix/desktop-topic-title-sources.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/.reasonix/desktop-topic-titles.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Hardware/Key.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Hardware/Key.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Hardware/Key.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Hardware/Key.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_flash.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_flash.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_i2c.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_i2c.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_usart.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Library/stm32f10x_usart.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project_FreeRTOS_Rebuild.dep" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/Project_FreeRTOS_Rebuild.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/alarm.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/buzzer.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/buzzer.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/delay.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/delay.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/dht11.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/dht11.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/event_groups.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/event_groups.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/heap_4.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/heap_4.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/key.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/led.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/led.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/list.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/list.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/main.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/main.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/misc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/misc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/oled.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/oled.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/port.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/port.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/queue.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/queue.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/record_storage.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/record_storage.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_adc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_adc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_bkp.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_bkp.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_can.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_can.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_cec.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_cec.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_crc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_crc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dac.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dac.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dbgmcu.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dbgmcu.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dma.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_dma.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_exti.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_exti.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_flash.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_flash.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_fsmc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_fsmc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_gpio.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_gpio.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_i2c.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_i2c.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_it.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_it.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_iwdg.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_iwdg.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_pwr.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_pwr.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_rcc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_rcc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_rtc.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_rtc.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_sdio.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_sdio.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_spi.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_spi.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_tim.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_tim.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_usart.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_usart.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_wwdg.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stm32f10x_wwdg.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stream_buffer.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/stream_buffer.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/system_stm32f10x.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/system_stm32f10x.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_alarm.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_alarm.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_display.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_display.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_key.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_key.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_record.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_record.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_sensor.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_sensor.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_statemachine.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/task_statemachine.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/tasks.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/tasks.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/timer_delay.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/timer_delay.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/timers.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/timers.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/ui.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/ui.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/usart.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Objects/usart.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Project.uvoptx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Start/stm32f10x.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Start/stm32f10x.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/UI.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/UI.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/alarm.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/alarm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/dht11.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/System/dht11.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_alarm.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_alarm.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_key.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_key.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_record.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_record.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_sensor.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_sensor.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_statemachine.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_statemachine.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_statemachine.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/Tasks/task_statemachine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/User/FreeRTOSConfig.h" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/User/FreeRTOSConfig.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/User/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_FreeRTOS/User/main.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -114,33 +238,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.RadMigrateCodeStyle&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/GithubHouse/STM32F103_Loka_Project/4-1 OLED显示屏&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "CidrDebugProfileConversion": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "D:/GithubHouse/STM32F103_Loka_Project/4-1 OLED显示屏",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.first.attach.projects": "true",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
+  <component name="SelectedDebugProfileService"><![CDATA[{
+  "profileIdByStamp": [],
+  "modificationCount": 1
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="" />
@@ -151,6 +280,7 @@
       <workItem from="1773330918473" duration="23000" />
       <workItem from="1784536208111" duration="1209000" />
       <workItem from="1784619191894" duration="25000" />
+      <workItem from="1788769919778" duration="798000" />
     </task>
     <servers />
   </component>

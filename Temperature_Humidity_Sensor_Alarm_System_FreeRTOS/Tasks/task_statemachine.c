@@ -51,21 +51,22 @@ void vTask_StateMachine(void* pvParameters) {
                     if (keyNum == KEY_CONFIRM) {
                         if (threshold_menu_index == 0) currentState = SETTING_CHANGE_TEMP;
                         else if (threshold_menu_index == 1) currentState = SETTING_CHANGE_HUMI;
+                        else currentState = SETTING_MENU;
                     }
-                    if (keyNum == KEY_UP) threshold_menu_index = 0;
-                    if (keyNum == KEY_DOWN) threshold_menu_index = 1;
+                    if (keyNum == KEY_UP) threshold_menu_index = (threshold_menu_index > 0) ? threshold_menu_index - 1 : 2;
+                    if (keyNum == KEY_DOWN) threshold_menu_index = (threshold_menu_index < 2) ? threshold_menu_index + 1 : 0;
                     break;
 
                 case SETTING_CHANGE_TEMP:
                     if (keyNum == KEY_SETTING_BACK) currentState = SETTING_CHANGE;
-                    if (keyNum == KEY_UP) temp_threshold++;
-                    if (keyNum == KEY_DOWN) temp_threshold--;
+                    if (keyNum == KEY_UP && temp_threshold < 99) temp_threshold++;
+                    if (keyNum == KEY_DOWN && temp_threshold > 0) temp_threshold--;
                     break;
 
                 case SETTING_CHANGE_HUMI:
                     if (keyNum == KEY_SETTING_BACK) currentState = SETTING_CHANGE;
-                    if (keyNum == KEY_UP) humi_threshold++;
-                    if (keyNum == KEY_DOWN) humi_threshold--;
+                    if (keyNum == KEY_UP && humi_threshold < 99) humi_threshold++;
+                    if (keyNum == KEY_DOWN && humi_threshold > 0) humi_threshold--;
                     break;
             }
 
@@ -90,7 +91,10 @@ void vTask_StateMachine(void* pvParameters) {
                     setting_menu_ui();
                     break;
                 case SETTING_HISTORY:
-                    setting_history_ui(); // 历史记录绘画
+                    if (xSemaphoreTake(historyMutex, portMAX_DELAY) == pdTRUE) {
+                        setting_history_ui();
+                        xSemaphoreGive(historyMutex);
+                    }
                     break;
                 case SETTING_CHANGE:
                     setting_change_ui();

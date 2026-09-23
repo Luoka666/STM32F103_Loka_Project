@@ -1,6 +1,27 @@
 #include "stm32f10x.h"
 #include "delay.h"
 #include "timer_delay.h"
+
+#define DHT11_TIMEOUT_US  120U
+
+static void DATA_OUT_Mode(void);
+static void DATA_INPUT_Mode(void);
+
+static uint8_t DHT11_WaitLevel(BitAction level, uint16_t timeout_us) {
+    while (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) != level) {
+        if (timeout_us == 0U) {
+            return 0;
+        }
+        timeout_us--;
+        Delay_us_TIM(1);
+    }
+    return 1;
+}
+
+static void DHT11_ReleaseBus(void) {
+    DATA_OUT_Mode();
+    GPIO_SetBits(GPIOA, GPIO_Pin_0);
+}
 // 初始化温湿度传感器所连DATA线
 void DHT11_Init(void) {
 
@@ -16,7 +37,7 @@ void DHT11_Init(void) {
 
 }
 // 设置DATA线为推挽输出模式，用于给DHT11发起始信号
-void DATA_OUT_Mode() {
+static void DATA_OUT_Mode(void) {
 
     GPIO_InitTypeDef p;
     p.GPIO_Mode = GPIO_Mode_Out_PP;
@@ -26,7 +47,7 @@ void DATA_OUT_Mode() {
 
 }
 // 设置DATA线为上拉输入模式，用于接收DHT11的响应信号
-void DATA_INPUT_Mode() {
+static void DATA_INPUT_Mode(void) {
 
     GPIO_InitTypeDef p;
     p.GPIO_Mode = GPIO_Mode_IPU;
@@ -36,7 +57,7 @@ void DATA_INPUT_Mode() {
 
 }
 // 传感器接收信号
-void DHT11_Accept() {
+static void DHT11_Accept(void) {
 
     // 拉低18ms
     GPIO_ResetBits(GPIOA,GPIO_Pin_0);
@@ -47,63 +68,38 @@ void DHT11_Accept() {
 
 }
 // 检测DHT11是否成功完成传输数据准备(1成功，0失败)
-uint8_t DHT11_Send_check() {
-
-    uint8_t counter = 0;
-
+static uint8_t DHT11_Send_check(void) {
     DATA_INPUT_Mode();// 切换上拉输入接收数据
 
-    while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1) {// 等待拉低
-        if (counter > 100) {
-            return 0;
-        }
-        Delay_us_TIM(1);
-        counter++;
-    }
-    counter = 0;
-    while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 0) {// 等待拉高
-        if (counter > 100) {
-            return 0;
-        }
-        Delay_us_TIM(1);
-        counter++;
-    }
-
+    if (!DHT11_WaitLevel(Bit_RESET, DHT11_TIMEOUT_US)) return 0;
+    if (!DHT11_WaitLevel(Bit_SET, DHT11_TIMEOUT_US)) return 0;
     return 1;
 
 }
-// 数据发送
-uint8_t DHT11_Send() {
-
-    uint8_t byte = 0;// 每一字节的数据
-    uint8_t bit = 0;// 读取的每一位数据
+// 读取一个字节；任何位超时都立即失败，避免任务永久卡死
+static uint8_t DHT11_ReadByte(uint8_t *value) {
+    uint8_t byte = 0;
+    uint8_t bit;
 
     for (int i = 0;i < 8;i++) {
 
-        // 等待拉低
-        while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1);
-        // 等待拉高
-        while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 0);
+        if (!DHT11_WaitLevel(Bit_RESET, DHT11_TIMEOUT_US)) return 0;
+        if (!DHT11_WaitLevel(Bit_SET, DHT11_TIMEOUT_US)) return 0;
 	
 		Delay_us_TIM(40);
 		
         if (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1) {
-
             bit = 1;
-            while (GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_0) == 1);//等待拉低
-
+            if (!DHT11_WaitLevel(Bit_RESET, DHT11_TIMEOUT_US)) return 0;
         }else {
-
             bit = 0;
-
         }
 
-        byte <<= 1; // 左移一位
-        byte |= bit; // 放bit=0
+        byte = (uint8_t)((byte << 1) | bit);
     }
 
-    return byte;
-	
+    *value = byte;
+    return 1;
 }
 // 数据接收检验与整合(0失败，1成功)
 uint8_t data_Check(uint8_t *temp, uint8_t *humi) {
@@ -114,11 +110,16 @@ uint8_t data_Check(uint8_t *temp, uint8_t *humi) {
     DHT11_Accept();
     DATA_INPUT_Mode();
     if (DHT11_Send_check() == 0) {
+        DHT11_ReleaseBus();
         return 0;  // 握手失败：传感器未响应
     }
     for (int i = 0;i < 5;i++) {
-        data[i] = DHT11_Send();
+        if (!DHT11_ReadByte(&data[i])) {
+            DHT11_ReleaseBus();
+            return 0;
+        }
     }
+    DHT11_ReleaseBus();
     if ((data[0] + data[1] + data[2] + data[3]) == data[4]) {
         *humi = data[0];
         *temp = data[2];

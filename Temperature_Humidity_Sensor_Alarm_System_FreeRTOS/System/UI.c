@@ -1,5 +1,4 @@
 #include "FreeRTOS.h"
-#include "timers.h"
 #include <stdio.h>
 #include "stm32f10x.h"
 #include "oled.h"
@@ -8,9 +7,9 @@
 #include "key.h"
 
 extern uint8_t temperature, humidity;
-extern uint8_t temp_threshold, humi_threshold;
-extern uint8_t menu_index;
-extern uint8_t threshold_menu_index;
+extern volatile uint8_t temp_threshold, humi_threshold;
+extern volatile uint8_t menu_index;
+extern volatile uint8_t threshold_menu_index;
 extern uint8_t keyNum;
 extern uint8_t history_temp[];
 extern uint8_t history_humi[];
@@ -120,5 +119,4 @@ void setting_history_ui() {
         OLED_ShowString(i + 1, 1, "                ");
     }
 }
-
 

@@ -25,14 +25,15 @@ typedef enum {
 #define KEY_SETTING_BACK   5
 
 // 全局变量声明
-extern SystemState currentState;
-extern uint8_t menu_index;
-extern uint8_t threshold_menu_index;
-extern uint8_t temp_threshold;
-extern uint8_t humi_threshold;
+extern volatile SystemState currentState;
+extern volatile uint8_t menu_index;
+extern volatile uint8_t threshold_menu_index;
+extern volatile uint8_t temp_threshold;
+extern volatile uint8_t humi_threshold;
 
 // 互斥锁声明
 extern SemaphoreHandle_t oledMutex;
+extern SemaphoreHandle_t historyMutex;
 
 // 状态机任务函数
 void vTask_StateMachine(void* pvParameters);

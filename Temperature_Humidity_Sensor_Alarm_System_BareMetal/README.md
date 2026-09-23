@@ -21,18 +21,21 @@
 - [使用说明](#使用说明)
 - [踩坑记录与调试经验](#踩坑记录与调试经验)
 - [待优化方向](#待优化方向未来计划)
+- [编译验证](#编译验证)
 - [总结](#总结)
 
 ---
 
 ## 功能特性
 
-- **实时监测**：DHT11 传感器采集温湿度，OLED 屏幕实时刷新
+- **周期监测**：DHT11 每 2 秒采集一次温湿度，OLED 仅在读取成功后刷新
 - **多级菜单**：支持设置主菜单、历史记录、阈值调整等 7 种系统状态
 - **阈值报警**：温湿度超限后 LED 与蜂鸣器自动闪烁/鸣叫报警（非阻塞式）
 - **历史记录**：环形缓冲区存储最近 4 次采样数据
 - **串口通信**：USART1 定时发送 ASCII 文本数据至上位机
 - **运行锁定**：RUN 状态下自动屏蔽菜单键，防止误触导致安全事故
+- **故障保护**：DHT11 各通信阶段均带超时，传感器断开时主循环不会永久卡死
+- **非阻塞按键**：20ms 周期扫描并连续采样消抖，按住按键不会阻塞其他逻辑
 
 ---
 
@@ -68,21 +71,32 @@ typedef enum {
 while (1) {
     uint32_t now = millis();
 
-    // 高频轮询区：每轮都执行
-    alarm_run(temperature, humidity); // 非阻塞报警检查
-
-    // 节拍任务区：每 100ms 执行一次
-    if (now - last_task_time >= 100) {
+    // 每 20ms 非阻塞扫描一次按键
+    if (now - last_key_time >= KEY_SCAN_PERIOD_MS) {
         keyNum = Key_GetNum();
-        last_task_time = now;
-        // 第一层：状态跳转
-        // 第二层：行为执行
+        // 按键事件 → 状态跳转 → UI 更新
     }
+
+    // RUN 状态下每 2 秒读取一次 DHT11
+    if (currentState == RUN &&
+        now - last_sensor_time >= DHT11_SAMPLE_PERIOD_MS) {
+        sensor_valid = data_Check(&temperature, &humidity);
+        if (sensor_valid) {
+            run_ui(temperature, humidity);
+            usart_send(temperature, humidity);
+            history_add(temperature, humidity);
+        }
+    }
+
+    // 报警逻辑保持非阻塞；STOP 或数据无效时强制关闭输出
+    alarm_run(currentState == RUN && sensor_valid ? temperature : 0,
+              currentState == RUN && sensor_valid ? humidity : 0);
 }
 ```
 
-- 报警检查每轮循环都运行，保证实时响应
-- UI 刷新、传感器采集等任务按 100ms 节拍执行
+- 按键扫描、DHT11 采样和报警分别使用独立节拍，互不阻塞
+- DHT11 采样周期为 2 秒，避免超出器件推荐读取频率
+- 阈值限制在 0～99，防止 `uint8_t` 加减发生回绕
 - 系统心跳由 SysTick 中断维护，延时函数不破坏 SysTick 配置
 - Delay_us 改为纯软件循环（__NOP），Delay_ms 基于 g_millis 实现
 
@@ -101,6 +115,7 @@ while (1) {
 | v0.7 | 引入环形缓冲区，重构历史记录存储与显示逻辑 |
 | v0.8 | 集成非阻塞式 LED 报警闪烁，RUN 状态下菜单锁定 |
 | v0.9 | 主循环升级为非阻塞事件驱动架构，重构延时函数保护系统心跳 |
+| v1.0 | 完成非阻塞按键消抖、DHT11 超时保护、2 秒采样调度和阈值边界保护 |
 
 ---
 
@@ -199,9 +214,7 @@ GPIO 时钟与端口不匹配：Key_Init() 函数中时钟使能了 GPIOA，但 
 ### 解决方案02
 修正 GPIO 配置为 GPIO_Mode_IPU：确保所有按键引脚都使能内部上拉，未按下时电平稳定为高。
 
-增加超时退出机制（可选）：在 while(等待松手) 循环内增加计数器，超时后强制跳出，避免死循环。
-
-后期优化方向：改为外部中断 + 非阻塞消抖，彻底消除阻塞隐患。
+最终版本将 `Key_GetNum()` 改为非阻塞状态式消抖：主循环每 20ms 采样一次，连续两次结果一致才确认按键，并且一次稳定按下只产生一个键值事件。
 
 ---
 
@@ -256,9 +269,9 @@ LED 报警灯不闪烁：温湿度超限后 LED 常灭，完全不亮。
 ### 解决方案04
 延时函数重构：Delay_us 改为纯软件循环（__NOP()），Delay_ms 改为基于 g_millis 的实现。两者都不再直接操作 SysTick->CTRL 寄存器，从根源上保护系统心跳。
 
-调整按键扫描位置：将 Key_GetNum() 移入 100ms 节拍任务内部，使键值的"生产"和"消费"在同一节拍内完成，消除时序错配。
+调整按键扫描机制：`Key_GetNum()` 每 20ms 非阻塞执行，检测到稳定按下后立即在同一轮主循环中消费键值，消除时序错配。
 
-补充说明：alarm_run 保留在高频轮询区，确保 LED 闪烁的实时性不受 100ms 节拍影响。
+补充说明：`alarm_run()` 保留在高频轮询区，确保 LED 闪烁的实时性不受按键扫描和传感器采样节拍影响。
 
 ### 核心代码
 
@@ -298,10 +311,15 @@ if (data_Check(&temperature, &humidity)) {
 
 ## 待优化方向（未来计划）
 
-- 按键扫描改为非阻塞式（消除 while(等待松手) 阻塞风险）
 - 阈值数据写入内部 Flash，实现掉电保存
-- 移植 FreeRTOS，将传感器采集、UI 刷新、报警处理拆分为独立任务
-- 开发 Python 上位机，通过串口实现数据可视化与远程控制（已完成，见[配套上位机](https://github.com/Luoka666/upper_computer)）
+- 增加 DHT11 连续失败计数及 OLED 故障提示
+- 利用 RTC 唤醒和 STOP 模式降低待机功耗
+
+## 编译验证
+
+- Keil MDK / ARMCC 5.06 update 5
+- 完整 Rebuild：`0 Error(s), 0 Warning(s)`
+- 程序大小：Code 6360 B，RO-data 1788 B，RW-data 72 B，ZI-data 1632 B
 
 ---
 

@@ -1,14 +1,15 @@
 #include "stm32f10x.h"
 #include "dht11.h"
 #include "oled.h"
-#include "delay.h"
 #include "USART.h"
 #include "key.h"
 #include "UI.h"
 #include "LED.h"
 #include "alarm.h"
 #include "Record_storage.h"
-#include <stdio.h>
+
+#define KEY_SCAN_PERIOD_MS      20U
+#define DHT11_SAMPLE_PERIOD_MS  2000U
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
@@ -41,9 +42,14 @@ typedef enum {
 SystemState currentState = STOP; //系统默认停止
 
 int main(void) {
+    uint32_t last_key_time;
+    uint32_t last_sensor_time;
+    SystemState lastState;
+    uint8_t sensor_valid = 0;
+
     currentState = STOP;
 
-    // 初始化外设（外设不工作，一定要先看有没有初始化😭😭😭😭）
+    // 初始化外设（外设不工作，一定要先看有没有初始化（哭）（哭）（哭）（哭））
     OLED_Init();
     DHT11_Init();
     usart_Init();
@@ -53,52 +59,18 @@ int main(void) {
     SysTick_Config(SystemCoreClock / 1000); // 1ms 中断
     OLED_Clear();
 
-    uint32_t last_task_time = 0; // 记录上次执行任务的时间
+    stop_ui();
+    last_key_time = millis();
+    last_sensor_time = millis();
+    lastState = currentState;
 
     while (1) {
+        uint32_t now = millis();
 
-			//----------------调试函数--------------------//
+        if ((uint32_t)(now - last_key_time) >= KEY_SCAN_PERIOD_MS) {
+            last_key_time = now;
+            keyNum = Key_GetNum();
 
-			//        // 调试：直接读 SysTick 寄存器
-			//		char buf[60];
-			//		sprintf(buf, "CTRL=0x%lX, VAL=%lu\r,millis=%lu\r\n", SysTick->CTRL, SysTick->VAL,millis());
-			//		USART_SendString(buf);
-			//		Delay_ms(200);
-
-			//串口显示按键参数，用于调试
-			//		if (keyNum != 0) {
-			//		char buf[40];
-			//		sprintf(buf, "keyNum=%d, state=%d\r\n", keyNum, currentState);
-			//		USART_SendString(buf);
-			//		}
-			//		//串口显示g_millis参数，用于调试
-			//		char buf[40];
-			//		sprintf(buf,"millis=%lu\r\n", millis());
-			//		USART_SendString(buf);
-			//		Delay_ms(500);
-		    // 临时测试：直接读取PA6电平并打印
-			//				char test_buf[40];
-			//				sprintf(test_buf, "%d\r\n", GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_5));
-			//				USART_SendString(test_buf);
-			//				
-			//				// 用一个简单的软件延时，避免串口发送太快
-			//				for (volatile int i = 0; i < 500000; i++);
-
-        //----------------调试函数--------------------//
-
-        uint32_t now = millis(); //获取当前计数时间
-
-        //高频轮询，每一轮检测按键
-//        keyNum = Key_GetNum(); // 非阻塞，无按键返回 0（防止按键事件丢失，移到if内）
-
-        alarm_run(temperature, humidity); // 报警系统//已经为非阻塞设计，每轮都跑
-
-        if (now - last_task_time >= 100) {
-			
-			keyNum = Key_GetNum();    // 移到这里
-			last_task_time = now;
-			static SystemState lastState = STOP;
-			
             /* ===== 第一层：按键到状态跳转 ===== */
             switch (currentState) {
                 case STOP:
@@ -131,27 +103,24 @@ int main(void) {
                 case SETTING_CHANGE:
                     if (keyNum == KEY_SETTING_back) currentState = SETTING_MENU; // K5 返回
                     if (keyNum == KEY_CONFIRM) {
-                        // K2 确认
                         if (threshold_menu_index == 0) currentState = SETTING_CHANGE_TEMP;
                         else if (threshold_menu_index == 1) currentState = SETTING_CHANGE_HUMI;
+                        else currentState = SETTING_MENU;
                     }
-                    if (keyNum == 3) threshold_menu_index = 0;
-                    if (keyNum == 4) threshold_menu_index = 1;
+                    if (keyNum == KEY_UP) threshold_menu_index = (threshold_menu_index > 0) ? threshold_menu_index - 1 : 2;
+                    if (keyNum == KEY_DOWN) threshold_menu_index = (threshold_menu_index < 2) ? threshold_menu_index + 1 : 0;
                     break;
 
                 case SETTING_CHANGE_TEMP:
                     if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
-                    //                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }// k2保存
-                    // K3/K4 调整阈值数值
-                    if (keyNum == 3) temp_threshold++;
-                    if (keyNum == 4) temp_threshold--;
+                    if (keyNum == KEY_UP && temp_threshold < 99U) temp_threshold++;
+                    if (keyNum == KEY_DOWN && temp_threshold > 0U) temp_threshold--;
                     break;
 
                 case SETTING_CHANGE_HUMI:
                     if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
-                    //                if (keyNum == 2) { /* 保存阈值 */ currentState = SETTING_CHANGE; }
-                    if (keyNum == 3) humi_threshold++;
-                    if (keyNum == 4) humi_threshold--;
+                    if (keyNum == KEY_UP && humi_threshold < 99U) humi_threshold++;
+                    if (keyNum == KEY_DOWN && humi_threshold > 0U) humi_threshold--;
                     break;
             }
 
@@ -159,45 +128,41 @@ int main(void) {
             if (currentState != lastState) {
                 OLED_Clear();
                 lastState = currentState;
+                if (currentState == RUN) {
+                    last_sensor_time = now - DHT11_SAMPLE_PERIOD_MS;
+                } else {
+                    sensor_valid = 0;
+                }
             }
 
-
-            /* ===== 第二层：状态到行为执行 ===== */
-            switch (currentState) {
-                case STOP:
-                    stop_ui();
-                    break;
-
-                case RUN:
-                    if (data_Check(&temperature, &humidity)) {   // 读取成功才更新，忘记加if，所以之前返回值根本没被检查
-                        run_ui(temperature, humidity); // 画UI
-                        usart_send(temperature, humidity); // 串口传送实时数据
-                        history_add(temperature, humidity); // 将数据存储到队列
-                    }
-                    break;
-
-                case SETTING_MENU:
-                    setting_menu_ui();
-                    break;
-
-                case SETTING_HISTORY:
-                    setting_history_ui();
-                    break;
-
-                case SETTING_CHANGE:
-                    setting_change_ui();
-                    break;
-
-                case SETTING_CHANGE_TEMP:
-                    setting_change_temp_ui();
-                    break;
-
-                case SETTING_CHANGE_HUMI:
-                    setting_change_humi_ui();
-                    break;
+            if (keyNum != 0U) {
+                switch (currentState) {
+                    case STOP:                stop_ui(); break;
+                    case RUN:                 run_ui(temperature, humidity); break;
+                    case SETTING_MENU:        setting_menu_ui(); break;
+                    case SETTING_HISTORY:     setting_history_ui(); break;
+                    case SETTING_CHANGE:      setting_change_ui(); break;
+                    case SETTING_CHANGE_TEMP: setting_change_temp_ui(); break;
+                    case SETTING_CHANGE_HUMI: setting_change_humi_ui(); break;
+                }
             }
         }
 
-        //Delay_ms(100);//主循环延时，放弃该延时方式，将所有延时方式改成非阻塞式设计。
+        if (currentState == RUN &&
+            (uint32_t)(now - last_sensor_time) >= DHT11_SAMPLE_PERIOD_MS) {
+            last_sensor_time = now;
+            sensor_valid = data_Check(&temperature, &humidity);
+            if (sensor_valid) {
+                run_ui(temperature, humidity);
+                usart_send(temperature, humidity);
+                history_add(temperature, humidity);
+            }
+        }
+
+        if (currentState == RUN && sensor_valid) {
+            alarm_run(temperature, humidity);
+        } else {
+            alarm_run(0, 0);
+        }
     }
 }

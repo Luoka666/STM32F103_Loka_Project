@@ -4,35 +4,49 @@
 #include "LED.h"
 #include "task_statemachine.h" // 获取当前系统状态
 
-// 传感器采集任务：每 100ms 采集一次，通过队列发送给其他任务
+// DHT11 的刷新周期较慢，连续读取至少间隔 2 秒
+#define DHT11_SAMPLE_PERIOD_MS  2000U
 
 void vTask_Sensor(void *pvParameters) {
     (void) pvParameters; // 空变量，防止编译器报警
     uint8_t temperature = 0, humidity = 0; // 存检测数据的中间变量
     SensorData_t data;
+    TickType_t last_sample_tick = 0;
+    uint8_t was_running = 0;
 
     while (1) {
+        TickType_t now = xTaskGetTickCount();
+
         // RUN状态下工作
         if (currentState == RUN) {
-            // 采集数据（直接调用原来写好的底层驱动函数）
-            if (data_Check(&temperature, &humidity)) {
-                // 采集成功，直接采集，不需要关中断了
-                data.temperature = temperature; //拿取数据
-                data.humidity = humidity;
-                usart_send(data.temperature, data.humidity); //验证是否采集成功
+            if (!was_running || (now - last_sample_tick) >= pdMS_TO_TICKS(DHT11_SAMPLE_PERIOD_MS)) {
+                was_running = 1;
+                last_sample_tick = now;
 
-                // 把数据塞进队列，发给显示任务和报警任务，每个任务消费者必须单独设置各自的队列，否则就会抢数据
-                //			USART_SendString("Before xQueue\r\n");  // ← 加这行
-                xQueueSend(sensorQueue, &data, portMAX_DELAY); // portMAX_DELAY 一直等，直到塞成功为止
-                //			USART_SendString("After xQueue\r\n");   // ← 加这行
-                xQueueSend(alarmQueue, &data, portMAX_DELAY); // 发给报警任务
-                xQueueSend(recordQueue, &data, 0); // 发给历史存储任务
-            } else {
-                USART_SendString("DHT11 fail\r\n");
+                if (data_Check(&temperature, &humidity)) {
+                    data.temperature = temperature;
+                    data.humidity = humidity;
+                    usart_send(data.temperature, data.humidity);
+
+                    // 显示和报警只关心最新值，长度为 1 的队列使用覆盖写避免反压
+                    (void)xQueueOverwrite(sensorQueue, &data);
+                    (void)xQueueOverwrite(alarmQueue, &data);
+
+                    // 历史队列满时丢掉最旧待处理项，再写入最新数据
+                    if (xQueueSend(recordQueue, &data, 0) != pdPASS) {
+                        SensorData_t discarded;
+                        (void)xQueueReceive(recordQueue, &discarded, 0);
+                        (void)xQueueSend(recordQueue, &data, 0);
+                    }
+                } else {
+                    USART_SendString("DHT11 timeout/checksum fail\r\n");
+                }
             }
+        } else {
+            was_running = 0;
         }
 
-        // 100ms 后再次采集
-        vTaskDelay(pdMS_TO_TICKS(100)); // 100/1000/1000 == 100ms，1tick == 1ms
+        // 高频检查状态，真正采样仍严格受 2 秒周期限制
+        vTaskDelay(pdMS_TO_TICKS(50));
     }
 }

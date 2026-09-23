@@ -1,6 +1,6 @@
 # 智能温湿度监测与报警系统（FreeRTOS 版）
 
-基于 **STM32F103C8T6** 标准库 + **FreeRTOS V10.3.1** 开发的嵌入式多任务实战项目。在裸机版双层状态机架构的基础上，将传感器采集、OLED 显示、报警处理、按键扫描拆分为独立 FreeRTOS 任务，通过队列进行任务间通信。
+基于 **STM32F103C8T6** 标准库 + **FreeRTOS V10.3.1** 开发的嵌入式多任务实战项目。在裸机版双层状态机架构的基础上，将传感器采集、OLED 显示、报警处理、按键扫描、状态机和历史记录拆分为 6 个独立任务，通过队列和互斥锁进行任务间协作。
 
 > 本项目配套 [Python 上位机](https://github.com/Luoka666/upper_computer)，通过串口接收数据并在 PC 端绘制实时温湿度动态曲线，实现从单片机到 PC 端的完整数据闭环。
 >
@@ -18,6 +18,7 @@
 - [使用说明](#使用说明)
 - [FreeRTOS 移植与重构踩坑记录](#freertos-移植与重构踩坑记录)
 - [待优化方向](#待优化方向未来计划)
+- [编译验证](#编译验证)
 
 ---
 
@@ -28,8 +29,12 @@
 - **多任务并发**：6 个独立 Task（Sensor / StateMachine / Alarm / Display / Record / Key）通过队列通信
 - **队列解耦**：传感器数据通过 3 条队列分发给不同消费者，各 Task 独立消费互不抢夺
 - **互斥锁 + 临界区**：OLED 访问双重保护，模块级互斥 + I2C 底层防抢占
+- **历史数据保护**：独立 `historyMutex` 保护历史环形缓冲区的读写一致性
 - **非阻塞延时**：`vTaskDelay()` 替代 `Delay_ms()`，CPU 不空转
+- **非阻塞按键**：Key Task 每 10ms 扫描，驱动层连续采样消抖，不再等待按键松手
 - **硬件定时器延时**：TIM2 提供微秒级精确延时，保护 DHT11 通信时序
+- **传感器保护**：DHT11 每 2 秒采样一次，所有电平等待均带超时
+- **队列防反压**：显示和报警队列覆盖旧值，历史队列满时淘汰最旧待处理数据
 - **Tick Hook 兼容**：FreeRTOS Tick Hook 替代裸机 SysTick_Handler，保留 g_millis
 
 ---
@@ -47,7 +52,8 @@
 | v0.7 | 引入环形缓冲区，重构历史记录存储与显示逻辑 |
 | v0.8 | 集成非阻塞式 LED 报警闪烁，RUN 状态下菜单锁定 |
 | v0.9 | 主循环升级为非阻塞事件驱动架构，重构延时函数保护系统心跳 |
-| v1.0 | 移植 FreeRTOS：拆分为 Sensor / Display / Alarm / Key 四个任务，队列通信 |
+| v1.0 | 移植 FreeRTOS：拆分为 6 个任务，使用队列和互斥锁通信 |
+| v1.1 | 完成按键非阻塞化、DHT11 超时保护、队列防反压、共享数据同步和创建失败检查 |
 
 ---
 
@@ -57,20 +63,20 @@
 
 | 任务 | 优先级 | 栈大小 | 周期 | 职责 |
 |------|--------|--------|------|------|
-| **Sensor** | 3（最高） | 128 | 100ms | RUN 状态下采集 DHT11，广播到 sensorQueue / alarmQueue / recordQueue |
+| **Sensor** | 3（最高） | 128 | 2s 采样 / 50ms 状态检查 | RUN 状态下采集 DHT11，广播到 sensorQueue / alarmQueue / recordQueue |
 | **StateMachine** | 2 | 256 | 事件驱动 | 从 keyQueue 取键值，管理 7 种系统状态跳转 + UI 绘制 |
-| **Alarm** | 2 | 128 | 事件驱动 | 从 alarmQueue 取数据，判断阈值，LED+蜂鸣器 500ms 周期报警 |
+| **Alarm** | 2 | 128 | 50ms 状态检查 | 保存最新数据并判断阈值，LED+蜂鸣器以 500ms 周期报警 |
 | **Display** | 1 | 256 | 事件驱动 | 从 sensorQueue 取数据，RUN 状态下刷新 OLED 温湿度显示 |
 | **Record** | 1 | 128 | 事件驱动 | 从 recordQueue 取数据，写入环形缓冲区（复用裸机版 history_add） |
-| **Key** | 1 | 128 | 20ms 轮询 | 调用 Key_GetNum() 扫描按键，键值通过 keyQueue 发送 |
+| **Key** | 1 | 128 | 10ms 轮询 | 调用非阻塞 Key_GetNum() 扫描按键，键值通过 keyQueue 发送 |
 
 ### 队列设计
 
 | 队列 | 深度 | 数据类型 | 生产者 | 消费者 |
 |------|------|----------|--------|--------|
-| `sensorQueue` | 5 | `SensorData_t` | Sensor Task | Display Task |
-| `alarmQueue` | 5 | `SensorData_t` | Sensor Task | Alarm Task |
-| `recordQueue` | 5 | `SensorData_t` | Sensor Task（timeout=0 非阻塞发送） | Record Task |
+| `sensorQueue` | 1 | `SensorData_t` | Sensor Task（覆盖写） | Display Task |
+| `alarmQueue` | 1 | `SensorData_t` | Sensor Task（覆盖写） | Alarm Task |
+| `recordQueue` | `HISTORY_SIZE` | `SensorData_t` | Sensor Task（满时淘汰最旧项） | Record Task |
 | `keyQueue` | 5 | `uint8_t` | Key Task | StateMachine Task |
 
 ### 互斥锁
@@ -78,6 +84,7 @@
 | 锁 | 保护对象 | 使用者 |
 |----|----------|--------|
 | `oledMutex` | OLED 模块级别访问互斥 | Display Task、StateMachine Task |
+| `historyMutex` | 历史记录环形缓冲区 | Record Task、StateMachine Task |
 
 OLED 底层 I2C 通信额外由 `taskENTER_CRITICAL()` 保护，互斥锁 + 临界区双重保护。
 
@@ -96,6 +103,7 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED（RUN 状态下�
 - Sensor 优先级最高，DHT11 微秒级通信期间不能被其他任务抢占
 - Alarm 优先级中等，数据到达时立即响应
 - Display 和 Key 优先级最低且同级，时间片轮转，不干扰 Sensor
+- 所有队列、互斥锁和任务创建结果都在启动调度器前检查，失败时进入明确的故障状态
 
 ### 裸机架构保留部分
 
@@ -218,7 +226,7 @@ DHT11 的通信时序是微秒级的，FreeRTOS 的 SysTick 中断（每 1ms 一
 ### 解决方案04
 
 - 立即修复：创建显示任务和报警任务作为消费者，从队列取数据，让队列有进有出
-- 防御性优化：报警任务在未超阈值时不再执行 `vTaskDelay(200)`，只关灯后立刻回到队列阻塞，确保消费速度跟上生产速度，避免队列积压反压传感器任务
+- 最终方案：`sensorQueue` 和 `alarmQueue` 深度设为 1，并使用 `xQueueOverwrite()` 始终保留最新采样值；`recordQueue` 满时先淘汰最旧待处理数据，再写入最新数据。任何消费者变慢都不会永久阻塞 Sensor Task
 
 ---
 
@@ -235,8 +243,10 @@ DHT11 的通信时序是微秒级的，FreeRTOS 的 SysTick 中断（每 1ms 一
 
 ### 解决方案05
 
-- 调整任务优先级：传感器任务升至最高（3），按键任务降至最低（1）。利用 FreeRTOS 的抢占式调度机制，即使按键任务在 while 空转，内核在每次 SysTick 中断时检查到高优先级的传感器任务就绪，会立刻抢占 CPU，传感器任务不再被饿死
-- 后续优化方向：用 FreeRTOS 软件定时器实现非阻塞按键消抖，彻底消除 while 空转，从根源上解决问题
+- 将 `Key_GetNum()` 重写为非阻塞状态式消抖，每次调用只采样一次 GPIO，不再使用 `while(等待松手)`
+- Key Task 每 10ms 调用一次，连续两次采样一致才确认状态，一次稳定按下只发送一个事件
+- `keyQueue` 使用零等待发送，即使队列暂时已满也不会阻塞按键任务
+- 删除重复的软件定时器扫描路径，并关闭未使用的 FreeRTOS 软件定时器功能
 
 ---
 
@@ -264,11 +274,16 @@ FreeRTOS 是多任务事件驱动架构。状态机任务默认 `currentState = 
 
 ## 待优化方向（未来计划）
 
-- 按键状态机接入：keyQueue 消费者实现，将键值送入裸机版的状态机逻辑
-- 按键扫描非阻塞化：将 `Key_GetNum()` 中的 while(等待松手) 改为外部中断 + 消抖定时器
 - 阈值数据写入内部 Flash，实现掉电保存
-- 利用 FreeRTOS 软件定时器替代 Alarm Task 中的 vTaskDelay 周期
+- 增加 DHT11 连续失败计数、故障状态上报和 OLED 提示
+- 增加栈高水位与剩余堆空间监控，便于长期运行分析
 - 利用 RTC 唤醒 + STOP 低功耗模式
+
+## 编译验证
+
+- Keil MDK / ARMCC 5.06 update 5
+- 完整 Rebuild：`0 Error(s), 0 Warning(s)`
+- 程序大小：Code 14744 B，RO-data 1788 B，RW-data 196 B，ZI-data 13316 B
 
 ---
 

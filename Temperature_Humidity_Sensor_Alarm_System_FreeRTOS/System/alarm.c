@@ -6,7 +6,7 @@
 #include "buzzer.h"
 //uint32_t last_blink_time = 0;  // 上次闪烁时间点
 //uint8_t  alarm_state = 0;        // 当前报警模块状态
-extern uint8_t temp_threshold, humi_threshold;
+extern volatile uint8_t temp_threshold, humi_threshold;
 extern volatile uint32_t g_millis;
 
 // SysTick 中断服务函数。注释掉，避免重复定义，直接去stm32f10x_it.c里配置。
@@ -60,4 +60,3 @@ void alarm_run(uint8_t temp, uint8_t humi) {
         alarm_state = 0;
     }
 }
-
