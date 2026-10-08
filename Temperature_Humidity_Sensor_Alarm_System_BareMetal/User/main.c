@@ -8,8 +8,10 @@
 #include "alarm.h"
 #include "Record_storage.h"
 
-#define KEY_SCAN_PERIOD_MS      20U
-#define DHT11_SAMPLE_PERIOD_MS  2000U
+/* 在架构上本质上是一个 “基于 SysTick 毫秒时间基准的裸机轮询调度系统”。 */
+
+#define KEY_SCAN_PERIOD_MS      20U // 按键轮询间隔
+#define DHT11_SAMPLE_PERIOD_MS  2000U // DHT11采样周期
 
 //变量定义
 uint8_t temperature = 0, humidity = 0;
@@ -45,11 +47,11 @@ int main(void) {
     uint32_t last_key_time;
     uint32_t last_sensor_time;
     SystemState lastState;
-    uint8_t sensor_valid = 0;
+    uint8_t sensor_valid = 0; // 传感器数据有效标志
 
     currentState = STOP;
 
-    // 初始化外设（外设不工作，一定要先看有没有初始化（哭）（哭）（哭）（哭））
+    // 初始化外设（外设不工作，一定要先看有没有初始化😭😭😭）
     OLED_Init();
     DHT11_Init();
     usart_Init();
@@ -67,11 +69,12 @@ int main(void) {
     while (1) {
         uint32_t now = millis();
 
+		// 每 20ms 查询按键
         if ((uint32_t)(now - last_key_time) >= KEY_SCAN_PERIOD_MS) {
             last_key_time = now;
             keyNum = Key_GetNum();
 
-            /* ===== 第一层：按键到状态跳转 ===== */
+            // 业务逻辑
             switch (currentState) {
                 case STOP:
                     if (keyNum == KEY_RUN_STOP) currentState = RUN; // K1 运行
@@ -84,15 +87,15 @@ int main(void) {
                     break;
 
                 case SETTING_MENU:
-                    if (keyNum == 5) currentState = STOP; //k5可以返回
+                    if (keyNum == 5) currentState = STOP; // k5 可以返回
                     if (keyNum == KEY_CONFIRM) {
                         // K2 确认
                         if (menu_index == 0) currentState = SETTING_HISTORY;
                         else if (menu_index == 1) currentState = SETTING_CHANGE;
                         else if (menu_index == 2) currentState = STOP;
                     }
-                    // K3/K4 在 MENU 状态下只改变 menu_index，不跳转状态
-                    if (keyNum == 3) menu_index = (menu_index > 0) ? menu_index - 1 : 2;
+                    // K3/K4 在 MENU 状态下只改变 menu_index（即光标指示），不跳转状态
+                    if (keyNum == 3) menu_index = (menu_index > 0) ? menu_index - 1 : 2; // 实现光标循环
                     if (keyNum == 4) menu_index = (menu_index < 2) ? menu_index + 1 : 0;
                     break;
 
@@ -113,7 +116,7 @@ int main(void) {
 
                 case SETTING_CHANGE_TEMP:
                     if (keyNum == KEY_SETTING_back) currentState = SETTING_CHANGE; // K5 返回
-                    if (keyNum == KEY_UP && temp_threshold < 99U) temp_threshold++;
+					if (keyNum == KEY_UP && temp_threshold < 99U) temp_threshold++; // 设置上下限
                     if (keyNum == KEY_DOWN && temp_threshold > 0U) temp_threshold--;
                     break;
 
@@ -126,7 +129,7 @@ int main(void) {
 
             /* 状态切换时清屏 */
             if (currentState != lastState) {
-                OLED_Clear();
+                OLED_Clear(); // 只在状态切换时清屏，避免每次while循环一次清一次屏
                 lastState = currentState;
                 if (currentState == RUN) {
                     last_sensor_time = now - DHT11_SAMPLE_PERIOD_MS;
@@ -134,8 +137,9 @@ int main(void) {
                     sensor_valid = 0;
                 }
             }
-
-            if (keyNum != 0U) {
+			
+			// 界面刷新
+            if (keyNum != 0U) { // 避免每次扫描按键都重画相同的界面。减少OLED通信开销
                 switch (currentState) {
                     case STOP:                stop_ui(); break;
                     case RUN:                 run_ui(temperature, humidity); break;
@@ -148,8 +152,7 @@ int main(void) {
             }
         }
 
-        if (currentState == RUN &&
-            (uint32_t)(now - last_sensor_time) >= DHT11_SAMPLE_PERIOD_MS) {
+        if (currentState == RUN && (uint32_t)(now - last_sensor_time) >= DHT11_SAMPLE_PERIOD_MS) { // 仅 RUN 状态下采样
             last_sensor_time = now;
             sensor_valid = data_Check(&temperature, &humidity);
             if (sensor_valid) {

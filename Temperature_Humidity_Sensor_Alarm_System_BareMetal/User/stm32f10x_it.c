@@ -121,7 +121,7 @@ volatile uint32_t g_millis = 0;
 
 void SysTick_Handler(void)
 {
-    g_millis++;
+    g_millis++; //毫秒计数每毫秒 + 1
 }
 
 

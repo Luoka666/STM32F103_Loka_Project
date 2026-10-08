@@ -1,7 +1,7 @@
 #include "stm32f10x.h"
 #include "delay.h"
 
-#define DHT11_TIMEOUT_US  120U
+#define DHT11_TIMEOUT_US  120U // U 表示数字是 unsigned int 类型
 
 static void DATA_OUT_Mode(void);
 static void DATA_INPUT_Mode(void);
