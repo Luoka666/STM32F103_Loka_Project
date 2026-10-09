@@ -19,7 +19,7 @@
   </component>
   <component name="CMakeRunConfigurationManager">
     <generated>
-      <config projectName="Temperature_Humidity_Sensor_Alarm_System" targetName="Temperature_Humidity_Sensor_Alarm_System" />
+      <config projectName="Temperature_Humidity_Sensor_Alarm_System_FreeRTOS" targetName="CLionIndex" />
     </generated>
   </component>
   <component name="CMakeSettings">
@@ -29,11 +29,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project_Target 1.dep" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project_Target 1.dep" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/stm32f10x_it.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/stm32f10x_it.crf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.reasonix/desktop-topic-auto-title-meta.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.reasonix/desktop-topic-created-at.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.reasonix/desktop-topic-title-sources.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.reasonix/desktop-topic-titles.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -198,24 +204,29 @@
   }
 }</component>
   <component name="RunManager">
-    <configuration name="Temperature_Humidity_Sensor_Alarm_System" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System" RUN_TARGET_NAME="Temperature_Humidity_Sensor_Alarm_System">
+    <configuration name="CLionIndex" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="Temperature_Humidity_Sensor_Alarm_System_FreeRTOS" TARGET_NAME="CLionIndex" CONFIG_NAME="Debug">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
   </component>
-  <component name="SelectedDebugProfileService">{
-  &quot;profileIdByStamp&quot;: [
+  <component name="SelectedDebugProfileService"><![CDATA[{
+  "profileIdByStamp": [
     {
-      &quot;first&quot;: {
-        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake Application.Temperature_Humidity_Sensor_Alarm_System&quot;,
-        &quot;cmake&quot;: &quot;CMakeBuildProfile:Debug&quot;
+      "first": {
+        "##RUN_CONFIGURATION##": "CMake Application.CLionIndex",
+        "cmake": "CMakeBuildProfile:Debug"
       },
-      &quot;second&quot;: &quot;ffc9293e-e6bc-4875-a6c0-e65a05a257ba&quot;
+      "second": "ffc9293e-e6bc-4875-a6c0-e65a05a257ba"
     }
   ],
-  &quot;modificationCount&quot;: 8
-}</component>
+  "modificationCount": 13
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="" />
@@ -250,6 +261,7 @@
       <workItem from="1787307545916" duration="682000" />
       <workItem from="1787308278390" duration="600000" />
       <workItem from="1787736979931" duration="80000" />
+      <workItem from="1791550550870" duration="1719000" />
     </task>
     <servers />
   </component>

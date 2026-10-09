@@ -29,14 +29,14 @@ void vTask_Sensor(void *pvParameters) {
                     usart_send(data.temperature, data.humidity);
 
                     // 显示和报警只关心最新值，长度为 1 的队列使用覆盖写避免反压
-                    (void)xQueueOverwrite(sensorQueue, &data);
-                    (void)xQueueOverwrite(alarmQueue, &data);
+                    (void) xQueueOverwrite(sensorQueue, &data);
+                    (void) xQueueOverwrite(alarmQueue, &data);
 
                     // 历史队列满时丢掉最旧待处理项，再写入最新数据
                     if (xQueueSend(recordQueue, &data, 0) != pdPASS) {
                         SensorData_t discarded;
-                        (void)xQueueReceive(recordQueue, &discarded, 0);
-                        (void)xQueueSend(recordQueue, &data, 0);
+                        (void) xQueueReceive(recordQueue, &discarded, 0);
+                        (void) xQueueSend(recordQueue, &data, 0);
                     }
                 } else {
                     USART_SendString("DHT11 timeout/checksum fail\r\n");
