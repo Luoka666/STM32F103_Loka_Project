@@ -16,9 +16,9 @@ void vTask_StateMachine(void* pvParameters) {
         if (xQueueReceive(keyQueue, &keyNum, portMAX_DELAY) == pdTRUE) { // 开机后如果没有任何按键事件，该任务就一直阻塞在队列上
             
             // 调试打印
-            char buf[30];
-            sprintf(buf, "State=%d, Key=%d\r\n", currentState, keyNum);
-            USART_SendString(buf);
+//            char buf[30];
+//            sprintf(buf, "State=%d, Key=%d\r\n", currentState, keyNum);
+//            USART_SendString(buf);
 
             /* ===== 第一层：按键到状态跳转 ===== */
             switch (currentState) {

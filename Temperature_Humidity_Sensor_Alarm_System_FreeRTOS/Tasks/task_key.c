@@ -1,5 +1,5 @@
 #include "task_key.h"
-#include "key.h"       // 你原来的按键驱动（Key_Init、Key_GetNum）
+#include "key.h"       // 原来的按键驱动（Key_Init、Key_GetNum）
 // 按键任务：每 10ms 扫描一次，驱动层完成非阻塞消抖
 void vTask_Key(void* pvParameters) {
     (void)pvParameters;

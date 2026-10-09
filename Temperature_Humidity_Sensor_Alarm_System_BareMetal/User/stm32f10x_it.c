@@ -117,6 +117,7 @@ void PendSV_Handler(void)
 {
 }
 
+// sys_tick_ms 会被 SysTick 中断修改，而 millis() 会在主程序中读取它，用 volatile 告诉编译器不要省略必要的读取操作。
 volatile uint32_t g_millis = 0;
 
 void SysTick_Handler(void)

@@ -15,6 +15,7 @@
 // FreeRTOS头文件
 #include "task.h"           // 任务相关所需 API（xTaskCreate、vTaskStartScheduler）
 #include "queue.h"          // 队列相关所需 API（xQueueCreate、xQueueSend）
+#include "semphr.h"
 #include "stm32f10x_rcc.h"
 #include "task_sensor.h"    // 传感器任务声明（SensorData_t、sensorQueue、vTask_Sensor）
 #include "task_display.h"
@@ -22,7 +23,8 @@
 #include "task_key.h"
 #include "task_statemachine.h"
 #include "task_record.h"
-//变量定义
+
+// 变量定义，一些变量会被多个任务同时使用，用 volatile 防止编译器对这些变量的访问做某些不适当的优化。
 uint8_t temperature = 0, humidity = 0;
 volatile SystemState currentState = STOP;
 volatile uint8_t menu_index = 0;
@@ -38,6 +40,7 @@ QueueHandle_t alarmQueue;
 QueueHandle_t keyQueue;
 QueueHandle_t recordQueue;
 
+// 故障处理函数
 static void System_Fatal(char *message) {
     USART_SendString(message);
     LED1_ON();
@@ -67,11 +70,11 @@ int main(void) {
 	alarmQueue = xQueueCreate(1, sizeof(SensorData_t));
 	// 创建按键队列（深度 5，每个元素是 uint8_t）
 	keyQueue = xQueueCreate(5, sizeof(uint8_t));
+	// 历史记录队列深度与环形缓冲区容量一致
+	recordQueue = xQueueCreate(HISTORY_SIZE, sizeof(SensorData_t));
 	// 互斥锁，保护oled每次只能被一个任务调用
 	oledMutex = xSemaphoreCreateMutex();
 	historyMutex = xSemaphoreCreateMutex();
-	// 历史记录队列深度与环形缓冲区容量一致
-	recordQueue = xQueueCreate(HISTORY_SIZE, sizeof(SensorData_t));
 
 	if (sensorQueue == NULL || alarmQueue == NULL || keyQueue == NULL ||
 		recordQueue == NULL || oledMutex == NULL || historyMutex == NULL) {

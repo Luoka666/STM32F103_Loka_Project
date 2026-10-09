@@ -154,7 +154,7 @@ int main(void) {
 
         if (currentState == RUN && (uint32_t)(now - last_sensor_time) >= DHT11_SAMPLE_PERIOD_MS) { // 仅 RUN 状态下采样
             last_sensor_time = now;
-            sensor_valid = data_Check(&temperature, &humidity);
+            sensor_valid = data_Check(&temperature, &humidity); // 接收是否成功标志
             if (sensor_valid) {
                 run_ui(temperature, humidity);
                 usart_send(temperature, humidity);
