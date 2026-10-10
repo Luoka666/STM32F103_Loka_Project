@@ -6,7 +6,7 @@
 #include "queue.h"
 #include "semphr.h"
 
-// 状态枚举（直接从裸机版搬过来用）
+// 状态枚举（能直接从裸机版搬过来用）
 typedef enum {
     STOP = 0,
     RUN,

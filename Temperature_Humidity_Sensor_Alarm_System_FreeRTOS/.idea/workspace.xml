@@ -29,18 +29,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.axf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.build_log.htm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project.htm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project_Target 1.dep" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/Project_Target 1.dep" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/stm32f10x_it.crf" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Objects/stm32f10x_it.crf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../Temperature_Humidity_Sensor_Alarm_System_BareMetal/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../2-1STM32projectexample/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../2-1STM32projectexample/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.axf" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.axf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/Objects/Project.build_log.htm" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,61 +70,61 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000069313" />
-      <entry key="MS500" value="1.0062962139343985" />
-      <entry key="S2" value="1.547363405630031" />
-      <entry key="S5" value="2.866811637362111" />
-      <entry key="S10" value="3.995511545078948" />
-      <entry key="S30" value="5.200246724340431" />
-      <entry key="S60" value="5.851428117617868" />
-      <entry key="M2" value="8.23612513109385" />
-      <entry key="M5" value="16.753675427028796" />
-      <entry key="M10" value="24.971196928748196" />
-      <entry key="M15" value="29.14059079841849" />
-      <entry key="M30" value="34.378366835912004" />
-      <entry key="H1" value="37.49284776618711" />
-      <entry key="H2" value="39.19404870835726" />
-      <entry key="H4" value="40.083493256292314" />
-      <entry key="D1" value="40.84533116568586" />
-      <entry key="W1" value="40.97785697846301" />
+      <entry key="MS100" value="1.0818995877417155" />
+      <entry key="MS500" value="1.6100735295843753" />
+      <entry key="S2" value="2.3653890247135836" />
+      <entry key="S5" value="3.726872254456391" />
+      <entry key="S10" value="4.896773893944411" />
+      <entry key="S30" value="6.157052525904944" />
+      <entry key="S60" value="6.827075928770035" />
+      <entry key="M2" value="9.218968910074414" />
+      <entry key="M5" value="17.739707228512614" />
+      <entry key="M10" value="25.960785023302396" />
+      <entry key="M15" value="30.13248999423896" />
+      <entry key="M30" value="35.373588075987044" />
+      <entry key="H1" value="38.49024183167578" />
+      <entry key="H2" value="40.19268659658033" />
+      <entry key="H4" value="41.08279673890772" />
+      <entry key="D1" value="41.845212872231755" />
+      <entry key="W1" value="41.97784002454678" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="2.0442530015746338E-145" />
-      <entry key="S2" value="6.724092218874769E-37" />
-      <entry key="S5" value="3.396670851928138E-15" />
-      <entry key="S10" value="5.828096474774708E-8" />
-      <entry key="S30" value="0.0038771170339109025" />
-      <entry key="S60" value="0.062266500093637066" />
-      <entry key="M2" value="0.24953256319293682" />
-      <entry key="M5" value="0.5739193811970368" />
-      <entry key="M10" value="0.7575746703771431" />
-      <entry key="M15" value="0.8310305007463891" />
-      <entry key="M30" value="0.9116087432371355" />
-      <entry key="H1" value="0.954782039649435" />
-      <entry key="H2" value="0.9771294897041206" />
-      <entry key="H4" value="0.9884986037947248" />
-      <entry key="D1" value="0.9980738492769773" />
-      <entry key="W1" value="0.9997246081934561" />
+      <entry key="MS500" value="1.2393414849073385E-145" />
+      <entry key="S2" value="5.933319660662029E-37" />
+      <entry key="S5" value="3.2308671357865216E-15" />
+      <entry key="S10" value="5.684071723497621E-8" />
+      <entry key="S30" value="0.003844912992180249" />
+      <entry key="S60" value="0.062007362403026386" />
+      <entry key="M2" value="0.24901277558194948" />
+      <entry key="M5" value="0.5734408820233027" />
+      <entry key="M10" value="0.757258794616017" />
+      <entry key="M15" value="0.8307994822539936" />
+      <entry key="M30" value="0.9114820251952279" />
+      <entry key="H1" value="0.9547156776733206" />
+      <entry key="H2" value="0.9770955314979803" />
+      <entry key="H4" value="0.9884814269868605" />
+      <entry key="D1" value="0.9980709587237679" />
+      <entry key="W1" value="0.9997241945737964" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="4.855569710261526E-5" />
-      <entry key="MS500" value="0.14261068196132926" />
-      <entry key="S2" value="1.1219371157385942" />
-      <entry key="S5" value="2.6141270390942855" />
-      <entry key="S10" value="3.830710049850832" />
-      <entry key="S30" value="5.1337409689581195" />
-      <entry key="S60" value="5.870100150824227" />
-      <entry key="M2" value="8.446399226727786" />
-      <entry key="M5" value="17.293525827850658" />
-      <entry key="M10" value="25.705083262858558" />
-      <entry key="M15" value="29.95387444752125" />
-      <entry key="M30" value="35.27997239256352" />
-      <entry key="H1" value="38.442313274622215" />
-      <entry key="H2" value="40.16843675135425" />
-      <entry key="H4" value="41.07059975961235" />
-      <entry key="D1" value="41.84316997852579" />
-      <entry key="W1" value="41.97754793540189" />
+      <entry key="MS100" value="0.08190356443272288" />
+      <entry key="MS500" value="0.6927150495374926" />
+      <entry key="S2" value="1.87239121619411" />
+      <entry key="S5" value="3.437708504649133" />
+      <entry key="S10" value="4.711332854151891" />
+      <entry key="S30" value="6.08279299694653" />
+      <entry key="S60" value="6.841508502270488" />
+      <entry key="M2" value="9.42672195004828" />
+      <entry key="M5" value="18.278273795457096" />
+      <entry key="M10" value="26.693948402056794" />
+      <entry key="M15" value="30.945269567914256" />
+      <entry key="M30" value="36.27492930023235" />
+      <entry key="H1" value="39.43957184281607" />
+      <entry key="H2" value="41.16700602361918" />
+      <entry key="H4" value="42.06986871294619" />
+      <entry key="D1" value="42.843045899067576" />
+      <entry key="W1" value="42.97753015414632" />
     </decayedShown>
   </component>
   <component name="PerforceDirect.Settings">
@@ -209,24 +201,19 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
-    </configuration>
   </component>
-  <component name="SelectedDebugProfileService"><![CDATA[{
-  "profileIdByStamp": [
+  <component name="SelectedDebugProfileService">{
+  &quot;profileIdByStamp&quot;: [
     {
-      "first": {
-        "##RUN_CONFIGURATION##": "CMake Application.CLionIndex",
-        "cmake": "CMakeBuildProfile:Debug"
+      &quot;first&quot;: {
+        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake Application.CLionIndex&quot;,
+        &quot;cmake&quot;: &quot;CMakeBuildProfile:Debug&quot;
       },
-      "second": "ffc9293e-e6bc-4875-a6c0-e65a05a257ba"
+      &quot;second&quot;: &quot;ffc9293e-e6bc-4875-a6c0-e65a05a257ba&quot;
     }
   ],
-  "modificationCount": 13
-}]]></component>
+  &quot;modificationCount&quot;: 13
+}</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
       <changelist id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="" />
@@ -261,7 +248,9 @@
       <workItem from="1787307545916" duration="682000" />
       <workItem from="1787308278390" duration="600000" />
       <workItem from="1787736979931" duration="80000" />
-      <workItem from="1791550550870" duration="1719000" />
+      <workItem from="1791550550870" duration="2799000" />
+      <workItem from="1791553503342" duration="232000" />
+      <workItem from="1791596632134" duration="26000" />
     </task>
     <servers />
   </component>

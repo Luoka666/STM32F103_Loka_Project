@@ -16,6 +16,7 @@
 - [FreeRTOS 任务架构](#freertos-任务架构)
 - [文件结构](#文件结构)
 - [使用说明](#使用说明)
+- [SPI 外部 Flash 阈值保存](#spi-外部-flash-阈值保存)
 - [FreeRTOS 移植与重构踩坑记录](#freertos-移植与重构踩坑记录)
 - [待优化方向](#待优化方向未来计划)
 - [编译验证](#编译验证)
@@ -36,6 +37,7 @@
 - **传感器保护**：DHT11 每 2 秒采样一次，所有电平等待均带超时
 - **队列防反压**：显示和报警队列覆盖旧值，历史队列满时淘汰最旧待处理数据
 - **Tick Hook 兼容**：FreeRTOS Tick Hook 替代裸机 SysTick_Handler，保留 g_millis
+- **SPI 阈值掉电保存**：SPI2 连接 3.3V W25Q64，K5 返回时保存两个阈值；开机读取，采用双扇区、CRC16 和最后提交标记，失败时提示重试。本轮不保存历史记录
 
 ---
 
@@ -54,6 +56,7 @@
 | v0.9 | 主循环升级为非阻塞事件驱动架构，重构延时函数保护系统心跳 |
 | v1.0 | 移植 FreeRTOS：拆分为 6 个任务，使用队列和互斥锁通信 |
 | v1.1 | 完成按键非阻塞化、DHT11 超时保护、队列防反压、共享数据同步和创建失败检查 |
+| v1.2 | 接入 SPI2 / W25Q64 阈值保存：双扇区、校验、读回验证、默认值回退；已完成实物读写联调及保存后断电重启恢复验证 |
 
 ---
 
@@ -64,7 +67,7 @@
 | 任务 | 优先级 | 栈大小 | 周期 | 职责 |
 |------|--------|--------|------|------|
 | **Sensor** | 3（最高） | 128 | 2s 采样 / 50ms 状态检查 | RUN 状态下采集 DHT11，广播到 sensorQueue / alarmQueue / recordQueue |
-| **StateMachine** | 2 | 256 | 事件驱动 | 从 keyQueue 取键值，管理 7 种系统状态跳转 + UI 绘制 |
+| **StateMachine** | 2 | 256 | 事件驱动 | 从 keyQueue 取键值，管理 7 种系统状态跳转、UI 绘制和 K5 阈值保存 |
 | **Alarm** | 2 | 128 | 50ms 状态检查 | 保存最新数据并判断阈值，LED+蜂鸣器以 500ms 周期报警 |
 | **Display** | 1 | 256 | 事件驱动 | 从 sensorQueue 取数据，RUN 状态下刷新 OLED 温湿度显示 |
 | **Record** | 1 | 128 | 事件驱动 | 从 recordQueue 取数据，写入环形缓冲区（复用裸机版 history_add） |
@@ -123,6 +126,8 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED（RUN 状态下�
 ├── Key.c / Key.h
 ├── LED.c / LED.h
 ├── buzzer.c / buzzer.h
+├── SPI2_Flash.c / SPI2_Flash.h     // SPI2 总线：PB12~PB15，模式 0
+├── W25Q64.c / W25Q64.h             // Flash 指令：ID、读、页编程、4KB 擦除
 └── timer_delay.c / timer_delay.h   // TIM2 硬件定时器延时
 
 /System                    // 系统逻辑层（与裸机版共用）
@@ -131,6 +136,7 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED（RUN 状态下�
 ├── alarm.c / alarm.h
 ├── UI.c / UI.h
 ├── Record_storage.c / Record_storage.h
+├── Threshold_storage.c / Threshold_storage.h // 阈值双扇区保存、恢复和校验
 └── delay.c / delay.h
 
 /FreeRTOS/Source           // FreeRTOS V10.3.1 内核
@@ -163,18 +169,97 @@ DHT11 → Sensor Task → sensorQueue → Display Task → OLED（RUN 状态下�
 | **DHT11** | PA0 | 单总线数据引脚 |
 | **OLED (I2C)** | SCL: PB8, SDA: PB9 | 0.96 寸 128x64 |
 | **按键 K1** | PA1 | 运行/停止总开关 |
-| **按键 K2** | PA2 | 确认/保存 |
+| **按键 K2** | PA2 | 菜单确认（阈值编辑页由 K5 保存） |
 | **按键 K3** | PA3 | 向上/递增 |
 | **按键 K4** | PA4 | 向下/递减 |
 | **按键 K5** | PA5 | 设置/返回 |
 | **报警 LED** | PA11 | 超阈值闪烁报警 |
 | **蜂鸣器** | PA12 | 超阈值鸣叫报警 |
 | **USART1** | TX: PA9, RX: PA10 | 串口发送至上位机 |
+| **W25Q64 (SPI2)** | CS: PB12, SCK: PB13, MISO: PB14, MOSI: PB15 | 适用 3.3V 模块，保存阈值 |
 
 ### Keil 编译配置
 
 - Options for Target → C/C++ → Include Paths 需添加：`User`、`Tasks`、`FreeRTOS/Source/include`、`FreeRTOS/Source/portable/RVDS/ARM_CM3`
 - Target 需勾选 Use MicroLIB
+- 新增的 `SPI2_Flash.c`、`W25Q64.c`、`Threshold_storage.c` 已加入 `Project.uvprojx`；若 Keil 原先开着旧工程，请重新打开工程以刷新文件列表。CMake 仍只用于 CLion 索引，不负责生成可烧录固件。
+
+## SPI 外部 Flash 阈值保存
+
+### 范围与硬件检查
+
+本轮只修改 FreeRTOS 版，保留原有六任务和四队列，不改裸机版、不保存历史记录。历史仍是 RAM 中最近四条数据，掉电会丢失。
+
+模块板上写 `W25Qxx` 只是系列标识，具体型号应看芯片本体/商品规格。当前驱动只接受 JEDEC ID `EF4017`、`EF7017` 的 W25Q64；其他型号返回错误且不擦写。不要为绕过错误随意去掉型号检查。
+
+| 模块引脚 | STM32 | 含义 |
+|---|---|---|
+| VCC | 3.3V | 仅限确认支持 3.3V 的模块 |
+| GND | GND | 共地 |
+| CS | PB12 | 软件片选，低有效 |
+| CLK / SCK | PB13 | SPI2 时钟 |
+| DO / MISO | PB14 | Flash 输出，STM32 输入 |
+| DI / MOSI | PB15 | STM32 输出，Flash 输入 |
+
+**供电不能只看 W25Qxx 字样**：W25Q64JV 是 2.7~3.6V 系列，但 W25Q64JW 是 1.8V 系列。未确认电压时先断电核对模块规格；软件不能补救过压。如果模块另有 `/WP`、`/HOLD` 引脚，需要按其原理图保持非激活状态，不能悬空。不要带电插拔接线。
+
+### 如何保存和验证
+
+1. 确认供电规格后，重新打开 `Project.uvprojx`，编译并烧录；串口保持原来的 **9600、8N1**。
+2. 首次空白 Flash：启动日志通常为 `Flash ID=EF4017 load=defaults driver=0 T=40 H=60`。默认值只在 RAM 中使用，开机不自动擦写。
+3. STOP 下 K5 进入设置，K3/K4 选择 `Thresholds`，K2 确认。再选 `Temp` 或 `Humi` 并按 K2，K3/K4 修改阈值。
+4. 在温度或湿度编辑页按 **K5**：先显示 `Saving...`，同时保存两个阈值。成功才返回阈值菜单，串口显示 `Threshold save=OK driver=0 T=... H=...`。
+5. OLED 显示 `FAIL K5 to retry` 时尚未确认保存成功，仍留在编辑页。检查接线/型号/串口错误后按 K5 重试；修改值仍在 RAM，不能当作已持久化。
+6. 成功后彻底断电再上电（注意断开调试器、USB 或其他可能反向供电的连接）。串口应显示 `load=OK`，进入阈值页应仍是刚才的值。
+7. 不修改数值再次 K5 返回，日志应为 `unchanged`，不再次擦写。仅按上下键、未按 K5 就断电，应恢复上一次成功保存值。
+
+上述步骤中的日志为预期格式示例；已取得的实物结果见下方记录。读回错误不自动清除保护位；受保护的芯片需先查明原因。
+
+### 实物验证记录（2026-10-10）
+
+- **型号识别**：Keil 调试中读取到 JEDEC ID `0xEF4017`，读 ID 成功标志为 `0x01`。
+- **阈值写入**：串口先后收到 `Threshold save=OK driver=0 T=45 H=60` 和 `Threshold save=OK driver=0 T=45 H=65`，完整记录已写入并读回校验通过。
+- **未变化跳过擦写**：保持 `T=45 H=65` 再次保存，收到 `Threshold save=unchanged driver=0 T=45 H=65`，未执行新的擦除和编程。
+- **保存后断电恢复**：开发者已完成整板断电再上电验证，重新进入阈值页面后仍是修改并保存后的数值，确认配置可跨掉电恢复。
+
+串口工具可能把一行日志分成多个接收块；以上保存日志按同一行内容拼接记录，不代表额外的数据帧。上述实测确认的是“保存完成后断电再启动”，不等同于“擦写进行中突然断电”的故障注入测试；后者当前仅在主机模拟测试中覆盖，不能宣称所有电源故障下都不丢数据。历史记录仍保存在 RAM，掉电不保留。
+
+### 保存流程与分区
+
+```
+开机：初始化 SPI2 → 读取 ID → 读取 A/B 配置 → 校验 → 选最新有效值/默认值
+K5：扫描已有配置 → 未变化则跳过 → 擦另一扇区 → 写正文 → 读回
+    → 写提交标记 → 再读回核对 → 成功返回菜单
+```
+
+| 地址范围 | 用途 |
+|---|---|
+| `0x000000~0x000FFF` | 阈值配置 A，4KB |
+| `0x001000~0x001FFF` | 阈值配置 B，4KB |
+| `0x002000` 及之后 | 本轮不使用，留给后续历史分区 |
+
+保存会擦除 A/B 中一个扇区，不能在这两个扇区放其他数据；没有提供整片擦除。每条配置是 15 字节：魔数、版本、两个阈值、序号、CRC16 和最后写入的提交标记。CRC16 参数为初值 `FFFF`、多项式 `1021`、不反射、不异或输出。
+
+SPI 传输有有限轮询保护；Flash BUSY 最多进行 2000 次 1ms 等待，实际时间还受调度影响。擦写时释放 CS 并让出 CPU，不在长临界区中等待。当前只有开机初始化和 StateMachine 访问 Flash，运行期单一调用者，不另加 Flash 锁/任务。以后 Record 也用 Flash 时必须重新设计存储所有权或互斥保护，不能直接并发复用本接口。
+
+双扇区可以在新记录不完整时回退旧记录，但不能替代芯片电源时序要求和真实掉电测试，也不是无限寿命的磨损均衡方案。
+
+### 阅读顺序与测试
+
+建议先看 `main.c` 中 `ThresholdStore_Init()`，再看 `task_statemachine.c` 中 `SaveThresholds()` 和两个阈值编辑分支。然后从 `Threshold_storage.c` 的 `ThresholdStore_Save()` 往下追 `W25Q64.c` 的页编程/擦除，最后看 `SPI2_Flash.c` 的字节收发。新增代码均配有中文注释。
+
+`Tests/test_threshold_storage.c` 在电脑上模拟 Flash，以真实 `W25Q64.c` / `Threshold_storage.c` 测试默认值、重启恢复、A/B 选择、CRC 损坏、未变化不擦写、写入中断、丢失读回、写保护、超时、边界和序号回绕。`Tests/host_stubs` **不加入固件**，只为测试提供替身。
+
+在本项目目录用主机 GCC 可执行：
+
+```powershell
+gcc -std=c99 -Wall -Wextra -Werror -Wconversion -ITests/host_stubs -IHardware -ISystem Tests/test_threshold_storage.c Hardware/W25Q64.c System/Threshold_storage.c -o test_threshold_storage.exe
+.\test_threshold_storage.exe
+```
+
+模拟测试不覆盖实际 SPI 寄存器、接线、电压和实物断电行为。阈值保存、未变化跳过擦写及保存完成后的实物断电恢复已验证；擦写过程中突然断电、原有按键/采集/显示/报警/历史菜单的完整回归以及任务栈高水位检查仍需单独执行，不能由模拟测试通过推断为实物全部通过。
+
+参考：[Winbond W25Q64JV 数据手册](https://www.mouser.com/catalog/specsheets/Winbond%20Electronics%20Corporation_08-25-2025_W25Q64JV.pdf)、[Winbond 电压系列选型资料](https://www.winbond.com/productResource-files/Winbond%20Automotive%20Flash%20Product%20Brief_EN_2024Q3_v1.pdf)。
 
 ---
 
@@ -274,7 +359,7 @@ FreeRTOS 是多任务事件驱动架构。状态机任务默认 `currentState = 
 
 ## 待优化方向（未来计划）
 
-- 阈值数据写入内部 Flash，实现掉电保存
+- SPI 外部 Flash 历史记录存储（阈值保存及保存后实物断电恢复已验证；历史持久化尚未实现）
 - 增加 DHT11 连续失败计数、故障状态上报和 OLED 提示
 - 增加栈高水位与剩余堆空间监控，便于长期运行分析
 - 利用 RTC 唤醒 + STOP 低功耗模式
@@ -282,8 +367,11 @@ FreeRTOS 是多任务事件驱动架构。状态机任务默认 `currentState = 
 ## 编译验证
 
 - Keil MDK / ARMCC 5.06 update 5
-- 完整 Rebuild：`0 Error(s), 0 Warning(s)`
-- 程序大小：Code 14744 B，RO-data 1788 B，RW-data 196 B，ZI-data 13316 B
+- 2026-10-10 SPI 阈值功能完整 Rebuild：`0 Error(s), 0 Warning(s)`
+- 程序大小：Code 18548 B，RO-data 1848 B，RW-data 216 B，ZI-data 13320 B
+- 主机 GCC 严格警告编译通过，20 项模拟测试通过
+- 2026-10-10 实物验证：JEDEC ID `EF4017`、阈值写入及读回成功、未变化跳过擦写、保存完成后整板断电重启恢复修改值
+- 验证边界：擦写中突然断电的实物故障注入及任务栈高水位检查尚未完成，历史记录仍仅存 RAM
 
 ---
 

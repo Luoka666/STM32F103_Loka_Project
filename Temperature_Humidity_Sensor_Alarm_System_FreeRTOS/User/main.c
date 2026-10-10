@@ -23,6 +23,7 @@
 #include "task_key.h"
 #include "task_statemachine.h"
 #include "task_record.h"
+#include "Threshold_storage.h"
 
 // 变量定义，一些变量会被多个任务同时使用，用 volatile 防止编译器对这些变量的访问做某些不适当的优化。
 uint8_t temperature = 0, humidity = 0;
@@ -31,7 +32,8 @@ volatile uint8_t menu_index = 0;
 volatile uint8_t threshold_menu_index = 0;
 
 //初始报警阈值
-volatile uint8_t temp_threshold = 40, humi_threshold = 60; // 报警阈值
+volatile uint8_t temp_threshold = THRESHOLD_DEFAULT_TEMP;
+volatile uint8_t humi_threshold = THRESHOLD_DEFAULT_HUMI;
 
 SemaphoreHandle_t oledMutex;
 SemaphoreHandle_t historyMutex;
@@ -60,6 +62,23 @@ int main(void) {
     TIM2_Delay_Init(); // 初始化硬件定时器延时
     init_alarm();
     Buzzer_off(); // 初始化为低电平，防止系统开始时就鸣叫
+
+    /* 新增：SPI2 外部 Flash 阈值恢复。TIM2 必须先初始化，因为此时调度器
+     * 还没启动，Flash 驱动用 TIM2 做短暂等待，不能调用 vTaskDelay。
+     * 先读到普通局部变量，再赋给 volatile 共享变量，不强行转换指针类型。
+     * 空白 Flash / 校验不通过使用 40℃、60%；未接好也不会阻止原项目启动。
+     */
+    {
+        uint8_t loaded_temp, loaded_humi;
+        char message[100];
+        ThresholdStore_Result result = ThresholdStore_Init(&loaded_temp, &loaded_humi);
+        temp_threshold = loaded_temp;
+        humi_threshold = loaded_humi;
+        sprintf(message, "Flash ID=%06lX load=%s driver=%u T=%u H=%u\r\n",
+                (unsigned long)ThresholdStore_GetJedecID(), ThresholdStore_ResultText(result),
+                (unsigned int)ThresholdStore_GetFlashResult(), loaded_temp, loaded_humi);
+        USART_SendString(message);
+    }
     OLED_Clear();
 
     stop_ui(); // 开机后主动画一次 STOP 界面，否则oled会显示黑屏

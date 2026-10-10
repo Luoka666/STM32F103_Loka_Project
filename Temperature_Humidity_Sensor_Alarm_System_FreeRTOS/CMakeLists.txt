@@ -58,6 +58,9 @@ set(index_sources
     Tasks/task_alarm.c
     Tasks/task_key.c
     Hardware/timer_delay.c
+    Hardware/SPI2_Flash.c
+    Hardware/W25Q64.c
+    System/Threshold_storage.c
     Tasks/task_statemachine.c
     Tasks/task_record.c
 )

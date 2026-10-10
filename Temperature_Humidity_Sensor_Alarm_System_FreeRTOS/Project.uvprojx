@@ -710,6 +710,16 @@
               <FileType>5</FileType>
               <FilePath>.\System\Record_storage.h</FilePath>
             </File>
+            <File>
+              <FileName>Threshold_storage.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\System\Threshold_storage.c</FilePath>
+            </File>
+            <File>
+              <FileName>Threshold_storage.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\System\Threshold_storage.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -769,6 +779,26 @@
               <FileName>timer_delay.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\Hardware\timer_delay.h</FilePath>
+            </File>
+            <File>
+              <FileName>SPI2_Flash.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\SPI2_Flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>SPI2_Flash.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\SPI2_Flash.h</FilePath>
+            </File>
+            <File>
+              <FileName>W25Q64.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Hardware\W25Q64.c</FilePath>
+            </File>
+            <File>
+              <FileName>W25Q64.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\Hardware\W25Q64.h</FilePath>
             </File>
           </Files>
         </Group>

@@ -4,11 +4,31 @@
 #include "USART.h"
 #include <stdio.h>
 #include "task_key.h"
+#include "Threshold_storage.h"
+
+/* 目前只在非 RUN 的阈值编辑页保存，不把 Flash 擦写塞进采集任务。
+ * 保存操作由本任务独占；Flash 等待 BUSY 时会让出 CPU。
+ * OLED 锁只用于画提示，绝不拿着 OLED 锁等待整个擦写过程。
+ */
+static uint8_t SaveThresholds(void) {
+    ThresholdStore_Result result;
+    char message[80];
+    xSemaphoreTake(oledMutex, portMAX_DELAY);
+    OLED_ShowString(4, 1, "Saving...       ");
+    xSemaphoreGive(oledMutex);
+    result = ThresholdStore_Save(temp_threshold, humi_threshold);
+    sprintf(message, "Threshold save=%s driver=%u T=%u H=%u\r\n",
+            ThresholdStore_ResultText(result), (unsigned int)ThresholdStore_GetFlashResult(),
+            temp_threshold, humi_threshold);
+    USART_SendString(message);
+    return result == THRESHOLD_STORE_OK || result == THRESHOLD_STORE_UNCHANGED;
+}
 
 // 状态机任务：从按键队列接收键值，管理状态跳转和 UI 绘制
 void vTask_StateMachine(void* pvParameters) {
     (void)pvParameters;
     uint8_t keyNum;
+    uint8_t save_failed = 0; // 保存失败时留在当前编辑页，K5 可重试。
     static SystemState lastState = STOP;
 	
     while (1) {
@@ -49,6 +69,7 @@ void vTask_StateMachine(void* pvParameters) {
                 case SETTING_CHANGE:
                     if (keyNum == KEY_SETTING_BACK) currentState = SETTING_MENU;
                     if (keyNum == KEY_CONFIRM) {
+                        save_failed = 0;
                         if (threshold_menu_index == 0) currentState = SETTING_CHANGE_TEMP;
                         else if (threshold_menu_index == 1) currentState = SETTING_CHANGE_HUMI;
                         else currentState = SETTING_MENU;
@@ -58,13 +79,22 @@ void vTask_StateMachine(void* pvParameters) {
                     break;
 
                 case SETTING_CHANGE_TEMP:
-                    if (keyNum == KEY_SETTING_BACK) currentState = SETTING_CHANGE;
+                    /* 上下键只修改 RAM；K5 才同时保存两个阈值。
+                     * 只有真正写入并读回验证成功，或与已保存值相同，才返回。
+                     */
+                    if (keyNum == KEY_SETTING_BACK) {
+                        save_failed = (uint8_t)!SaveThresholds();
+                        if (!save_failed) currentState = SETTING_CHANGE;
+                    }
                     if (keyNum == KEY_UP && temp_threshold < 99) temp_threshold++;
                     if (keyNum == KEY_DOWN && temp_threshold > 0) temp_threshold--;
                     break;
 
                 case SETTING_CHANGE_HUMI:
-                    if (keyNum == KEY_SETTING_BACK) currentState = SETTING_CHANGE;
+                    if (keyNum == KEY_SETTING_BACK) {
+                        save_failed = (uint8_t)!SaveThresholds();
+                        if (!save_failed) currentState = SETTING_CHANGE;
+                    }
                     if (keyNum == KEY_UP && humi_threshold < 99) humi_threshold++;
                     if (keyNum == KEY_DOWN && humi_threshold > 0) humi_threshold--;
                     break;
@@ -110,6 +140,13 @@ void vTask_StateMachine(void* pvParameters) {
                     break;
             }
 			
+            if (save_failed && (currentState == SETTING_CHANGE_TEMP ||
+                                currentState == SETTING_CHANGE_HUMI)) {
+                /* 16 字符覆盖整行，避免旧的 Back and Save 字符残留。
+                 * 失败时修改值仍在 RAM，但并未保证掉电保存。
+                 */
+                OLED_ShowString(4, 1, "FAIL K5 to retry ");
+            }
             xSemaphoreGive(oledMutex);
         }
     }
