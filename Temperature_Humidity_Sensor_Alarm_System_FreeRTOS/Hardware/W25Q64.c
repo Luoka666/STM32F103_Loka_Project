@@ -109,7 +109,10 @@ W25Q64_Result W25Q64_Init(uint32_t *jedec_id) {
     if (result != W25Q64_OK) return result;
 
     SPI2_Flash_Select();
-    ok = SPI2_Flash_ExchangeByte(CMD_READ_ID, &ignored) &&
+    /* SPI 的特点是：发送一个字节的同时，也接收一个字节,所以需要ignored。
+     * ignored 只是起的变量名，意思是“这个接收结果不使用”*/
+    /* 0xFF 可以理解成“陪跑字节”, 用于产生时钟信号 */
+    ok = SPI2_Flash_ExchangeByte(CMD_READ_ID, &ignored) && // 读取 JEDEC ID
          SPI2_Flash_ExchangeByte(0xFFU, &id[0]) &&
          SPI2_Flash_ExchangeByte(0xFFU, &id[1]) &&
          SPI2_Flash_ExchangeByte(0xFFU, &id[2]);

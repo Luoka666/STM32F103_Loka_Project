@@ -33,19 +33,20 @@ void SPI2_Flash_Init(void) {
     SPI_StructInit(&spi);
     spi.SPI_Mode = SPI_Mode_Master;
     spi.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-    spi.SPI_DataSize = SPI_DataSize_8b;
+    spi.SPI_DataSize = SPI_DataSize_8b; // 每次处理 8 位数据
     /* 模式 0：SCK 空闲为低电平，在第一个时钟边沿采样。 */
     spi.SPI_CPOL = SPI_CPOL_Low;
     spi.SPI_CPHA = SPI_CPHA_1Edge;
     spi.SPI_NSS = SPI_NSS_Soft;
     /* 本项目 APB1=36MHz，32 分频后 SCK 约 1.125MHz，先以低速联调。 */
     spi.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_32;
+    /* 先发送高位，一个字节，8个位，传一个字节需要 8 个时钟周期，一个时钟周期Flash 传输一个位，8 个时钟周期传输一个字节。 */
     spi.SPI_FirstBit = SPI_FirstBit_MSB;
     SPI_Init(SPI2, &spi);
     SPI_NSSInternalSoftwareConfig(SPI2, SPI_NSSInternalSoft_Set);
     SPI_Cmd(SPI2, ENABLE);
 }
-
+// 把 PB12 拉低，表示选中 Flash 芯片，之后就可以通信。
 void SPI2_Flash_Select(void) {
     GPIO_ResetBits(GPIOB, GPIO_Pin_12);
 }
@@ -54,6 +55,7 @@ uint8_t SPI2_Flash_ExchangeByte(uint8_t tx, uint8_t *rx) {
     uint32_t remaining = SPI2_POLL_LIMIT;
     if (rx == 0) return 0;
 
+    // 等待发送寄存器空，可以放入数据。
     while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET) {
         if (--remaining == 0) return 0;
     }
@@ -64,6 +66,7 @@ uint8_t SPI2_Flash_ExchangeByte(uint8_t tx, uint8_t *rx) {
      * 只想读取时，发送 0xFF 来产生时钟，Flash 才能从 MISO 输出数据。
      */
     remaining = SPI2_POLL_LIMIT;
+    // 等待接收寄存器非空，可以读取数据。
     while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET) {
         if (--remaining == 0) return 0;
     }

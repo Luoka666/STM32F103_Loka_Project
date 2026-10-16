@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 #include "W25Q64.h"
-
+// 默认温度上限
 #define THRESHOLD_DEFAULT_TEMP 40U
 #define THRESHOLD_DEFAULT_HUMI 60U
 /* 两个扇区专用于阈值；以后加历史存储必须从 0x002000 之后另行分区。

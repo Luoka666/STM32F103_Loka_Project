@@ -4,9 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Environment/Hierarchy/GeneratedFilesCacheKey/Timestamp/@EntryValue" value="3" type="long" />
     <option name="/Default/Housekeeping/FeatureSuggestion/FeatureSuggestionManager/DisabledSuggesters/=SwitchToGoToActionSuggester/@EntryIndexedValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/GlobalSettingsUpgraded/IsUpgraded/@EntryValue" value="true" type="bool" />
     <option name="/Default/RiderDebugger/RiderRestoreDecompile/RestoreDecompileSetting/@EntryValue" value="false" type="bool" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
   </component>
   <component name="CMakePresetLoader">{
   &quot;useNewFormat&quot;: true
@@ -29,10 +33,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
-      <change beforePath="$PROJECT_DIR$/../2-1STM32projectexample/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../2-1STM32projectexample/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/SPI2_Flash.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/SPI2_Flash.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Hardware/W25Q64.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/W25Q64.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Tasks/task_statemachine.h" beforeDir="false" afterPath="$PROJECT_DIR$/Tasks/task_statemachine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/System/Threshold_storage.h" beforeDir="false" afterPath="$PROJECT_DIR$/System/Threshold_storage.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,6 +66,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Library/stm32f10x_gpio.h" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Library/stm32f10x_spi.c" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="gjQ0KMk5" />
@@ -70,65 +77,62 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0818995877417155" />
-      <entry key="MS500" value="1.6100735295843753" />
-      <entry key="S2" value="2.3653890247135836" />
-      <entry key="S5" value="3.726872254456391" />
-      <entry key="S10" value="4.896773893944411" />
-      <entry key="S30" value="6.157052525904944" />
-      <entry key="S60" value="6.827075928770035" />
-      <entry key="M2" value="9.218968910074414" />
-      <entry key="M5" value="17.739707228512614" />
-      <entry key="M10" value="25.960785023302396" />
-      <entry key="M15" value="30.13248999423896" />
-      <entry key="M30" value="35.373588075987044" />
-      <entry key="H1" value="38.49024183167578" />
-      <entry key="H2" value="40.19268659658033" />
-      <entry key="H4" value="41.08279673890772" />
-      <entry key="D1" value="41.845212872231755" />
-      <entry key="W1" value="41.97784002454678" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0001843204540226" />
+      <entry key="S2" value="1.1517791258735235" />
+      <entry key="S5" value="1.6859660681463082" />
+      <entry key="S10" value="2.1632186608652706" />
+      <entry key="S30" value="2.6668533309268816" />
+      <entry key="S60" value="2.826243566448448" />
+      <entry key="M2" value="2.9708321581377866" />
+      <entry key="M5" value="4.6286803518655475" />
+      <entry key="M10" value="11.269881670887381" />
+      <entry key="M15" value="18.33182007535511" />
+      <entry key="M30" value="32.53687897712955" />
+      <entry key="H1" value="44.56451401253359" />
+      <entry key="H2" value="52.468304725389444" />
+      <entry key="H4" value="57.01021129060156" />
+      <entry key="D1" value="61.1353551177587" />
+      <entry key="W1" value="61.8756446244262" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
-      <entry key="MS500" value="1.2393414849073385E-145" />
-      <entry key="S2" value="5.933319660662029E-37" />
-      <entry key="S5" value="3.2308671357865216E-15" />
-      <entry key="S10" value="5.684071723497621E-8" />
-      <entry key="S30" value="0.003844912992180249" />
-      <entry key="S60" value="0.062007362403026386" />
-      <entry key="M2" value="0.24901277558194948" />
-      <entry key="M5" value="0.5734408820233027" />
-      <entry key="M10" value="0.757258794616017" />
-      <entry key="M15" value="0.8307994822539936" />
-      <entry key="M30" value="0.9114820251952279" />
-      <entry key="H1" value="0.9547156776733206" />
-      <entry key="H2" value="0.9770955314979803" />
-      <entry key="H4" value="0.9884814269868605" />
-      <entry key="D1" value="0.9980709587237679" />
-      <entry key="W1" value="0.9997241945737964" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="1.8612794337332338E-281" />
+      <entry key="S5" value="5.104164133469732E-113" />
+      <entry key="S10" value="7.144343310248835E-57" />
+      <entry key="S30" value="1.9259903430844012E-19" />
+      <entry key="S60" value="4.3886106492652114E-10" />
+      <entry key="M2" value="2.094901107275761E-5" />
+      <entry key="M5" value="0.013442047029399648" />
+      <entry key="M10" value="0.11593984228641882" />
+      <entry key="M15" value="0.2377689483142018" />
+      <entry key="M30" value="0.4876155743146459" />
+      <entry key="H1" value="0.6982947617694449" />
+      <entry key="H2" value="0.8356403303870896" />
+      <entry key="H4" value="0.9141336501776367" />
+      <entry key="D1" value="0.9851483085317968" />
+      <entry key="W1" value="0.997864699845776" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.08190356443272288" />
-      <entry key="MS500" value="0.6927150495374926" />
-      <entry key="S2" value="1.87239121619411" />
-      <entry key="S5" value="3.437708504649133" />
-      <entry key="S10" value="4.711332854151891" />
-      <entry key="S30" value="6.08279299694653" />
-      <entry key="S60" value="6.841508502270488" />
-      <entry key="M2" value="9.42672195004828" />
-      <entry key="M5" value="18.278273795457096" />
-      <entry key="M10" value="26.693948402056794" />
-      <entry key="M15" value="30.945269567914256" />
-      <entry key="M30" value="36.27492930023235" />
-      <entry key="H1" value="39.43957184281607" />
-      <entry key="H2" value="41.16700602361918" />
-      <entry key="H4" value="42.06986871294619" />
-      <entry key="D1" value="42.843045899067576" />
-      <entry key="W1" value="42.97753015414632" />
+      <entry key="MS100" value="0.0015537821948338258" />
+      <entry key="MS500" value="0.2743647663310769" />
+      <entry key="S2" value="0.8093635770513278" />
+      <entry key="S5" value="1.3956892213200365" />
+      <entry key="S10" value="1.9357150111243502" />
+      <entry key="S30" value="2.558495879796708" />
+      <entry key="S60" value="2.766609703698205" />
+      <entry key="M2" value="2.938851477940708" />
+      <entry key="M5" value="4.621278460435484" />
+      <entry key="M10" value="11.362401444941755" />
+      <entry key="M15" value="18.546096978464455" />
+      <entry key="M30" value="33.00568082855952" />
+      <entry key="H1" value="45.25065804034868" />
+      <entry key="H2" value="53.29700879814501" />
+      <entry key="H4" value="57.9206352672447" />
+      <entry key="D1" value="62.1198491217053" />
+      <entry key="W1" value="62.87341493583609" />
     </decayedShown>
-  </component>
-  <component name="PerforceDirect.Settings">
-    <option name="CHARSET" value="无" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -206,13 +210,13 @@
   &quot;profileIdByStamp&quot;: [
     {
       &quot;first&quot;: {
-        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake Application.CLionIndex&quot;,
+        &quot;##RUN_CONFIGURATION##&quot;: &quot;CMake 应用程序.CLionIndex&quot;,
         &quot;cmake&quot;: &quot;CMakeBuildProfile:Debug&quot;
       },
       &quot;second&quot;: &quot;ffc9293e-e6bc-4875-a6c0-e65a05a257ba&quot;
     }
   ],
-  &quot;modificationCount&quot;: 13
+  &quot;modificationCount&quot;: 17
 }</component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
@@ -251,6 +255,16 @@
       <workItem from="1791550550870" duration="2799000" />
       <workItem from="1791553503342" duration="232000" />
       <workItem from="1791596632134" duration="26000" />
+      <workItem from="1791717277024" duration="98000" />
+      <workItem from="1791717443510" duration="255000" />
+      <workItem from="1791717708986" duration="8542000" />
+      <workItem from="1791764366623" duration="3441000" />
+      <workItem from="1791886769396" duration="624000" />
+      <workItem from="1791904775492" duration="726000" />
+      <workItem from="1791953232172" duration="2973000" />
+      <workItem from="1792039071761" duration="373000" />
+      <workItem from="1792039485629" duration="3035000" />
+      <workItem from="1792075121062" duration="12000" />
     </task>
     <servers />
   </component>
