@@ -1,0 +1,4 @@
+Objects/
+Listings/
+*.uvguix.*
+build.log

@@ -33,12 +33,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c6673047-3818-4576-b083-24d6a605a339" name="更改" comment="">
+      <change beforePath="$PROJECT_DIR$/../4-1 OLED显示屏/Objects/Project.build_log.htm" beforeDir="false" afterPath="$PROJECT_DIR$/../4-1 OLED显示屏/Objects/Project.build_log.htm" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../4-1 OLED显示屏/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/../4-1 OLED显示屏/Project.uvguix.32663" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/SPI2_Flash.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/SPI2_Flash.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Hardware/W25Q64.c" beforeDir="false" afterPath="$PROJECT_DIR$/Hardware/W25Q64.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.uvguix.32663" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvguix.32663" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project.uvoptx" beforeDir="false" afterPath="$PROJECT_DIR$/Project.uvoptx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/System/Threshold_storage.h" beforeDir="false" afterPath="$PROJECT_DIR$/System/Threshold_storage.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -265,6 +262,7 @@
       <workItem from="1792039071761" duration="373000" />
       <workItem from="1792039485629" duration="3035000" />
       <workItem from="1792075121062" duration="12000" />
+      <workItem from="1792130088922" duration="22000" />
     </task>
     <servers />
   </component>
